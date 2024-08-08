@@ -2,12 +2,16 @@ package com.secondhandplatform.domain.user;
 
 import com.secondhandplatform.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
