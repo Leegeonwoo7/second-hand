@@ -1,2 +1,7 @@
-package com.secondhandplatform.domain;public enum UserType {
+package com.secondhandplatform.domain.user;
+
+public enum UserType {
+
+    USER,
+    ADMIN
 }
