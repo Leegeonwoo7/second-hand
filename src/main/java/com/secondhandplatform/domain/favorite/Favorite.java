@@ -5,12 +5,12 @@ import com.secondhandplatform.domain.product.Product;
 import com.secondhandplatform.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Favorite extends BaseEntity {
 
@@ -27,4 +27,10 @@ public class Favorite extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Builder
+    private Favorite(User user, Product product) {
+        this.user = user;
+        this.product = product;
+    }
 }

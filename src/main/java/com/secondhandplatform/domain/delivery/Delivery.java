@@ -4,12 +4,12 @@ import com.secondhandplatform.domain.BaseEntity;
 import com.secondhandplatform.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Delivery extends BaseEntity {
 
@@ -27,4 +27,11 @@ public class Delivery extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    private Delivery(Address address, DeliverStatus deliverStatus, User user) {
+        this.address = address;
+        this.deliverStatus = deliverStatus;
+        this.user = user;
+    }
 }

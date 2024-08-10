@@ -2,14 +2,13 @@ package com.secondhandplatform.domain.product;
 
 import com.secondhandplatform.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Product extends BaseEntity {
 
@@ -41,4 +40,15 @@ public class Product extends BaseEntity {
     @Column(name = "selling_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SellingStatus sellingStatus;
+
+    @Builder
+    private Product(String name, String description, int price, int quantity, Category category, ProductStatus productStatus, SellingStatus sellingStatus) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+        this.productStatus = productStatus;
+        this.sellingStatus = sellingStatus;
+    }
 }

@@ -5,6 +5,7 @@ import com.secondhandplatform.domain.favorite.Favorite;
 import com.secondhandplatform.domain.follow.Follow;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity {
@@ -54,4 +54,17 @@ public class User extends BaseEntity {
     //TODO 유저 - 찜 양방향 관계설정
     //@OneToMany
     //private List<Favorite> favorites;
+
+    @Builder
+    private User(String loginId, String password, String email, String phone, LocalDate birthday, String name, UserType userType, SignupType signupType, Boolean emailVerified) {
+        this.loginId = loginId;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.name = name;
+        this.userType = userType;
+        this.signupType = signupType;
+        this.emailVerified = emailVerified;
+    }
 }

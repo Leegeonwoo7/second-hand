@@ -2,8 +2,13 @@ package com.secondhandplatform.domain.payment;
 
 import com.secondhandplatform.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Payment extends BaseEntity {
 
     @Column(name = "payment_id")
@@ -20,4 +25,11 @@ public class Payment extends BaseEntity {
 
     @Column(nullable = false)
     private int amount;
+
+    @Builder
+    private Payment(PaymentType type, PayStatus status, int amount) {
+        this.type = type;
+        this.status = status;
+        this.amount = amount;
+    }
 }

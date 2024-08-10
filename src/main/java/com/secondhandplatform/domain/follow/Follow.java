@@ -4,12 +4,12 @@ import com.secondhandplatform.domain.BaseEntity;
 import com.secondhandplatform.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Follow extends BaseEntity {
 
@@ -24,4 +24,10 @@ public class Follow extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "followee_id")
     private User followee;
+
+    @Builder
+    private Follow(User follower, User followee) {
+        this.follower = follower;
+        this.followee = followee;
+    }
 }
