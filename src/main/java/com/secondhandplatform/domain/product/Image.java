@@ -12,4 +12,9 @@ public class Image extends BaseEntity {
     @Lob
     @Column(name = "image_data", nullable = false)
     private byte[] data;
+
+    //TODO 현재 단방향 매핑, 양방향 매핑고려
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

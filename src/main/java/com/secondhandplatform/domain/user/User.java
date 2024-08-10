@@ -1,17 +1,21 @@
 package com.secondhandplatform.domain.user;
 
 import com.secondhandplatform.domain.BaseEntity;
+import com.secondhandplatform.domain.favorite.Favorite;
+import com.secondhandplatform.domain.follow.Follow;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "users")
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,4 +50,8 @@ public class User extends BaseEntity {
 
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified;
+
+    //TODO 유저 - 찜 양방향 관계설정
+    //@OneToMany
+    //private List<Favorite> favorites;
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -40,6 +41,4 @@ public class Product extends BaseEntity {
     @Column(name = "selling_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private SellingStatus sellingStatus;
-
-//    private List<Image> images;
 }

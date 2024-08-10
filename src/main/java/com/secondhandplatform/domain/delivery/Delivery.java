@@ -1,9 +1,16 @@
 package com.secondhandplatform.domain.delivery;
 
 import com.secondhandplatform.domain.BaseEntity;
+import com.secondhandplatform.domain.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Delivery extends BaseEntity {
 
     @Column(name = "delivery_id")
@@ -15,4 +22,8 @@ public class Delivery extends BaseEntity {
 
     @Column(name = "deliver_status")
     private DeliverStatus deliverStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
