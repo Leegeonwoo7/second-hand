@@ -20,7 +20,8 @@ public class Delivery extends BaseEntity {
     @Embedded
     private Address address;
 
-    @Column(name = "deliver_status")
+    @Column(name = "delivery_status")
+    @Enumerated(EnumType.STRING)
     private DeliverStatus deliverStatus;
 
     @ManyToOne

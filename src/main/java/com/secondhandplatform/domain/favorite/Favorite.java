@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class Favorite extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "favorite_id")
     private Long id;
 
     //TODO 현재 단방향 매핑, 양방향 매핑고려
