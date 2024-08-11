@@ -1,8 +1,11 @@
-package com.secondhandplatform.repository;
+package com.secondhandplatform.service.user;
 
+import com.secondhandplatform.api.request.user.IdCheckRequest;
 import com.secondhandplatform.domain.user.SignupType;
 import com.secondhandplatform.domain.user.User;
 import com.secondhandplatform.domain.user.UserType;
+import com.secondhandplatform.repository.UserRepository;
+import com.secondhandplatform.service.user.response.IdCheckResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,42 +17,18 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UserRepositoryTest {
+class UserServiceTest {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
 
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAllInBatch();
-    }
-
     @Test
     @Order(1)
-    @DisplayName("회원을 저장한다.")
-    void save() {
-        // given
-        LocalDate birthdate = LocalDate.of(1998, 5, 1);
-        User userA = createUser("userA",
-                "1234",
-                "userA@example.com",
-                "01012341234",
-                birthdate,
-                UserType.USER,
-                SignupType.APP,
-                false);
-
-        //when
-        User saveUser = userRepository.save(userA);
-
-        //then
-        assertThat(saveUser.getId()).isEqualTo(1L);
-    }
-
-    @Test
-    @Order(2)
-    @DisplayName("이미 저장된 로그인 아이디인지 확인한다.")
-    void existsByLoginId() {
+    @DisplayName("아이디가 중복이면 Duplicate 응답을 반환한다.")
+    void idCheck() {
         // given
         String loginId = "userA";
         User userA = createUser(loginId,
@@ -60,14 +39,18 @@ class UserRepositoryTest {
                 UserType.USER,
                 SignupType.APP,
                 false);
-
         userRepository.save(userA);
 
+        IdCheckRequest request = IdCheckRequest.builder()
+                .loginId(loginId)
+                .build();
+
         //when
-        boolean result = userRepository.existsByLoginId(loginId);
+        IdCheckResponse response = userService.checkLoginId(request);
 
         //then
-        assertThat(result).isTrue();
+        assertThat(response.getResult()).isEqualTo("DUPLICATE_ID");
+        assertThat(response.getLoginId()).isEqualTo(loginId);
     }
 
 
@@ -80,7 +63,7 @@ class UserRepositoryTest {
             UserType userType,
             SignupType signupType,
             boolean emailVerified
-            ) {
+    ) {
         return User.builder()
                 .loginId(loginId)
                 .password(password)
