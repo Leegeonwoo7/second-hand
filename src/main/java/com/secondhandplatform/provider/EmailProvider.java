@@ -31,8 +31,8 @@ public class EmailProvider {
 
             javaMailSender.send(message);
         } catch (Exception e){
-            log.error("Failed to send email to {}", email, e);
-            throw new EmailSendException("이메일 전송에 실패했습니다.", e);
+            log.error("이메일 전송 실패 {}", email, e);
+            return false;
         }
 
         return true;
