@@ -5,22 +5,23 @@ import lombok.Getter;
 @Getter
 public class IdCheckResponse {
 
-    private final static String SUCCESS = "SUCCESS";
-    private final static String FAIL = "DUPLICATE_ID";
+    private boolean isDuplicate;
+    private String message;
 
-    private String result;
-    private String loginId;
-
-    private IdCheckResponse(String result, String loginId) {
-        this.result = result;
-        this.loginId = loginId;
+    public IdCheckResponse(boolean isDuplicate, String message) {
+        this.isDuplicate = isDuplicate;
+        this.message = message;
     }
 
-    public static IdCheckResponse success(String loginId) {
-        return new IdCheckResponse(SUCCESS, loginId);
+    public static IdCheckResponse success() {
+        return new IdCheckResponse( false, "Can use login ID");
     }
 
-    public static IdCheckResponse duplicate(String loginId) {
-        return new IdCheckResponse(FAIL, loginId);
+    public static IdCheckResponse duplicate() {
+        return new IdCheckResponse(true, "Duplicate login ID");
+    }
+
+    public static IdCheckResponse databaseError() {
+        return new IdCheckResponse(true, "Duplicate login ID");
     }
 }
