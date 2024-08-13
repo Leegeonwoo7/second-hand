@@ -66,6 +66,7 @@ public class UserService {
     public SignupResponse signup(SignupRequest request) {
         User user = request.toEntity();
         User saveUser = userRepository.save(user);
+        return null;
     }
 }
 
