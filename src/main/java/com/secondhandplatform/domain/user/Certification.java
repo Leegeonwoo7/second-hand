@@ -22,6 +22,10 @@ public class Certification extends BaseEntity {
 
     private LocalDateTime expiresAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
     private Certification(String email, String certificationNumber, LocalDateTime expiresAt) {
         this.email = email;

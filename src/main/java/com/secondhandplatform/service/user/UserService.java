@@ -2,13 +2,16 @@ package com.secondhandplatform.service.user;
 
 import com.secondhandplatform.api.request.user.EmailCertificationRequest;
 import com.secondhandplatform.api.request.user.IdCheckRequest;
+import com.secondhandplatform.api.request.user.SignupRequest;
 import com.secondhandplatform.domain.user.Certification;
+import com.secondhandplatform.domain.user.User;
 import com.secondhandplatform.provider.CertificationNumber;
 import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.repository.UserRepository;
 import com.secondhandplatform.service.user.response.EmailCertificationResponseDto;
 import com.secondhandplatform.service.user.response.IdCheckResponse;
+import com.secondhandplatform.service.user.response.SignupResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,6 +61,11 @@ public class UserService {
 
         certificationRepository.save(certification);
         return EmailCertificationResponseDto.success(email);
+    }
+
+    public SignupResponse signup(SignupRequest request) {
+        User user = request.toEntity();
+        User saveUser = userRepository.save(user);
     }
 }
 
