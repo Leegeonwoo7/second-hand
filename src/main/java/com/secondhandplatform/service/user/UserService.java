@@ -2,7 +2,8 @@ package com.secondhandplatform.service.user;
 
 import com.secondhandplatform.api.request.user.EmailCertificationRequest;
 import com.secondhandplatform.api.request.user.IdCheckRequest;
-import com.secondhandplatform.api.request.user.SignupRequest;
+import com.secondhandplatform.api.request.user.LoginRequest;
+import com.secondhandplatform.api.request.user.SignUpRequest;
 import com.secondhandplatform.domain.user.Certification;
 import com.secondhandplatform.domain.user.User;
 import com.secondhandplatform.provider.CertificationNumber;
@@ -11,7 +12,7 @@ import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.repository.UserRepository;
 import com.secondhandplatform.service.user.response.EmailCertificationResponseDto;
 import com.secondhandplatform.service.user.response.IdCheckResponse;
-import com.secondhandplatform.service.user.response.SignupResponse;
+import com.secondhandplatform.service.user.response.SignUpResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,20 @@ public class UserService {
             return IdCheckResponse.duplicate();
         }
         return IdCheckResponse.success();
+    }
+
+    public SignUpResponse signUp(SignUpRequest request) {
+        User user = request.toEntity();
+        User saveUser = userRepository.save(user);
+        return SignUpResponse.of(saveUser);
+    }
+
+    // TODO 로그인 구현
+    public LoginResponse login(LoginRequest request) {
+        String loginId = request.getLoginId();
+        String password = request.getPassword();
+
+
     }
 
     public EmailCertificationResponseDto emailCertification(EmailCertificationRequest request) {
@@ -63,10 +78,6 @@ public class UserService {
         return EmailCertificationResponseDto.success(email);
     }
 
-    public SignupResponse signup(SignupRequest request) {
-        User user = request.toEntity();
-        User saveUser = userRepository.save(user);
-        return null;
-    }
+
 }
 

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="로그인">Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+<div class="container">
+    <div th:replace="~{fragment/navbar :: navbar}"></div>
+
+    <main class="form-signin w-100 m-auto">
+        <form th:action="@{/users/login}" th:method="post">
+            <h1 class="h3 mb-3 fw-normal">로그인 정보를 입력해주세요</h1>
+
+<!--            TODO 아이디 중복확인 및 이메일 검증 추가-->
+            <div class="form-floating">
+                <input type="text" class="form-control" id="floatingInput" name="loginId" placeholder="ID">
+                <label for="floatingInput">아이디</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" name="password"  placeholder="Password">
+                <label for="floatingPassword">비밀번호</label>
+            </div>
+
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Remember me
+                </label>
+            </div>
+            <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
+        </form>
+    </main>
+</div>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

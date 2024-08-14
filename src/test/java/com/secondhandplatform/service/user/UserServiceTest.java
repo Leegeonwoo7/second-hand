@@ -1,19 +1,19 @@
 package com.secondhandplatform.service.user;
 
-import com.secondhandplatform.api.request.user.EmailCertificationRequest;
 import com.secondhandplatform.api.request.user.IdCheckRequest;
+import com.secondhandplatform.api.request.user.SignUpRequest;
 import com.secondhandplatform.domain.user.SignupType;
 import com.secondhandplatform.domain.user.User;
 import com.secondhandplatform.domain.user.UserType;
 import com.secondhandplatform.repository.UserRepository;
 import com.secondhandplatform.service.user.response.IdCheckResponse;
+import com.secondhandplatform.service.user.response.SignUpResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -83,6 +83,33 @@ class UserServiceTest {
 
         //then
         assertThat(response.getMessage()).isEqualTo("Can use login ID");
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("회원가입에 성공한다.")
+    void signUp() {
+        // given
+        LocalDate birth = LocalDate.of(1999, 7, 15);
+
+        SignUpRequest userA = SignUpRequest.builder()
+                .loginId("userA")
+                .name("내 상점")
+                .email("test@example.com")
+                .password("password")
+                .phone("01012341234")
+                .birthday(birth)
+                .signupType(SignupType.APP)
+                .userType(UserType.USER)
+                .build();
+
+        //when
+        SignUpResponse response = userService.signUp(userA);
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response.getLoginId()).isEqualTo("userA");
+        assertThat(response.getBirthday()).isEqualTo(birth);
     }
 
     //TODO emailCertification() 테스트코드작성
