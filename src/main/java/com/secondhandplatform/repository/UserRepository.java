@@ -7,5 +7,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    // 아이디 중복체크
     boolean existsByLoginId(String loginId);
+
+    // 로그인 아이디 회원조회
+    User findByLoginId(String loginId);
 }

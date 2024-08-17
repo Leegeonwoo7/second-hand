@@ -70,6 +70,30 @@ class UserRepositoryTest {
         assertThat(result).isTrue();
     }
 
+    @Test
+    @Order(3)
+    @DisplayName("로그인 요청시 존재하는 회원인지 확인한다.")
+    void findByLoginIdSuccess() {
+        // given
+        String loginId = "userA";
+        User userA = createUser(loginId,
+                "1234",
+                "userA@example.com",
+                "01012341234",
+                LocalDate.now(),
+                UserType.USER,
+                SignupType.APP,
+                false);
+        userRepository.save(userA);
+
+        //when
+        User user = userRepository.findByLoginId(loginId);
+
+        //then
+        assertNotNull(user);
+        assertThat(user.getLoginId()).isEqualTo(loginId);
+    }
+
 
     private static User createUser(
             String loginId,
