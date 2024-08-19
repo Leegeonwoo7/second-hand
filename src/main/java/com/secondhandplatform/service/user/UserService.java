@@ -1,18 +1,13 @@
 package com.secondhandplatform.service.user;
 
-import com.secondhandplatform.api.request.user.CheckCertificationRequest;
-import com.secondhandplatform.api.request.user.DuplicateLoginIdRequest;
-import com.secondhandplatform.api.request.user.EmailCertificationRequest;
-import com.secondhandplatform.api.request.user.SendCertificationRequest;
+import com.secondhandplatform.api.request.user.*;
 import com.secondhandplatform.domain.user.Certification;
+import com.secondhandplatform.domain.user.User;
 import com.secondhandplatform.provider.CertificationNumber;
 import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.repository.UserRepository;
-import com.secondhandplatform.service.user.response.CheckCertificationResponse;
-import com.secondhandplatform.service.user.response.DuplicateLoginIdResponse;
-import com.secondhandplatform.service.user.response.EmailCertificationResponse;
-import com.secondhandplatform.service.user.response.SendCertificationResponse;
+import com.secondhandplatform.service.user.response.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +68,7 @@ public class UserService {
         String targetEmail = findCertification.getEmail();
         String targetCertificationNumber = findCertification.getCertificationNumber();
         LocalDateTime expiresTime = findCertification.getExpiresAt();
+
         if (LocalDateTime.now().isAfter(expiresTime)) {
             log.warn("이메일 인증시간 초과: {}", expiresTime);
             return CheckCertificationResponse.fail();
@@ -83,6 +79,24 @@ public class UserService {
         }
 
         return CheckCertificationResponse.success();
+    }
+
+    // TODO 회원가입 실패시 null을 반환해도 괜찮을까?
+    public UserResponse join(JoinRequest request) {
+        String certificationNumber = request.getCertificationNumber();
+        String email = request.getEmail();
+
+        Certification findCertification = certificationRepository.findByEmail(email);
+        String targetEmail = findCertification.getEmail();
+        String targetCertificationNumber = findCertification.getCertificationNumber();
+
+        if (!(certificationNumber.equals(targetCertificationNumber) && email.equals(targetEmail))) {
+            log.warn("회원가입 정보가 일치하지 않습니다.");
+            return null;
+        }
+
+        User saveUser = userRepository.save(request.toEntity());
+        return UserResponse.of(saveUser);
     }
 
 }

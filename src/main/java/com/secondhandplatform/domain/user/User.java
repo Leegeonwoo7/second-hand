@@ -48,15 +48,15 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SignupType signupType;
 
-    @Column(name = "email_verified", nullable = false)
-    private Boolean emailVerified;
+//    @Column(name = "email_verified", nullable = false)
+//    private Boolean emailVerified;
 
     //TODO 유저 - 찜 양방향 관계설정
     //@OneToMany
     //private List<Favorite> favorites;
-
+//    , Boolean emailVerified
     @Builder
-    private User(String loginId, String password, String email, String phone, LocalDate birthday, String name, UserType userType, SignupType signupType, Boolean emailVerified) {
+    private User(String loginId, String password, String email, String phone, LocalDate birthday, String name, UserType userType, SignupType signupType) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;
@@ -65,6 +65,6 @@ public class User extends BaseEntity {
         this.name = name;
         this.userType = userType;
         this.signupType = signupType;
-        this.emailVerified = emailVerified;
+//        this.emailVerified = emailVerified;
     }
 }

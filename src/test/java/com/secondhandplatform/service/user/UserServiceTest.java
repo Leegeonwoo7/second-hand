@@ -2,6 +2,7 @@ package com.secondhandplatform.service.user;
 
 import com.secondhandplatform.api.request.user.CheckCertificationRequest;
 import com.secondhandplatform.api.request.user.DuplicateLoginIdRequest;
+import com.secondhandplatform.api.request.user.JoinRequest;
 import com.secondhandplatform.api.request.user.SendCertificationRequest;
 import com.secondhandplatform.domain.user.Certification;
 import com.secondhandplatform.domain.user.SignupType;
@@ -11,6 +12,7 @@ import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.service.user.response.CheckCertificationResponse;
 import com.secondhandplatform.service.user.response.DuplicateLoginIdResponse;
 import com.secondhandplatform.service.user.response.SendCertificationResponse;
+import com.secondhandplatform.service.user.response.UserResponse;
 import org.junit.jupiter.api.*;
 import com.secondhandplatform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,10 +105,6 @@ class UserServiceTest {
         assertThat(findCertification.getEmail()).isEqualTo(email);
     }
 
-//    SendCertificationRequest sendRequest = SendCertificationRequest.builder()
-//            .email(email)
-//            .build();
-//        userService.sendCertification(sendRequest);
     @Test
     @Order(4)
     @DisplayName("이메일 인증번호 요청확인을 성공한다")
@@ -192,6 +190,94 @@ class UserServiceTest {
         assertThat(response.isSuccess()).isFalse();
     }
 
+    @Test
+    @Order(8)
+    @DisplayName("회원가입시 이메일과 인증번호가 확인되면 회원가입에 성공한다")
+    void join() {
+        // given
+        String email = "test@example.com";
+        String certificationNumber = "1234";
+        Certification certification = Certification.create(email, certificationNumber);
+        certificationRepository.save(certification);
+
+        LocalDate birth = LocalDate.of(1992, 4, 2);
+        JoinRequest request = JoinRequest.builder()
+                .loginId("userA")
+                .password("user123")
+                .phone("01051231234")
+                .birthday(birth)
+                .email("test@example.com")
+                .name("myShop")
+                .certificationNumber(certificationNumber)
+                .build();
+
+        //when
+        UserResponse response = userService.join(request);
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response.getLoginId()).isEqualTo("userA");
+        assertThat(response.getEmail()).isEqualTo(email);
+        assertThat(response.getName()).isEqualTo("myShop");
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("회원가입에 실패한다")
+    void join_fail() {
+        // given
+        String email = "test@example.com";
+        String certificationNumber = "1234";
+        Certification certification = Certification.create(email, certificationNumber);
+        certificationRepository.save(certification);
+
+        LocalDate birth = LocalDate.of(1992, 4, 2);
+        JoinRequest request = JoinRequest.builder()
+                .loginId("userA")
+                .password("user123")
+                .phone("01051231234")
+                .birthday(birth)
+                .email("test@example.com")
+                .name("myShop")
+                .certificationNumber("5678")
+                .build();
+
+        //when
+        UserResponse response = userService.join(request);
+
+        //then
+        assertThat(response).isNull();
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("회원가입시 이름을 입력하지않으면 로그인아이디로 대체된다")
+    void join_setName() {
+        // given
+        String email = "test@example.com";
+        String certificationNumber = "1234";
+        Certification certification = Certification.create(email, certificationNumber);
+        certificationRepository.save(certification);
+
+        LocalDate birth = LocalDate.of(1992, 4, 2);
+        JoinRequest request = JoinRequest.builder()
+                .loginId("userA")
+                .password("user123")
+                .phone("01051231234")
+                .birthday(birth)
+                .email("test@example.com")
+                .certificationNumber(certificationNumber)
+                .build();
+
+        //when
+        UserResponse response = userService.join(request);
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response.getName()).isEqualTo("userA");
+    }
+
+
     private static User createUser(
             String loginId,
             String password,
@@ -210,7 +296,6 @@ class UserServiceTest {
                 .birthday(birthday)
                 .userType(userType)
                 .signupType(signupType)
-                .emailVerified(emailVerified)
                 .build();
     }
 }
