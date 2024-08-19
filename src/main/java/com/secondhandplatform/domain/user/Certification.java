@@ -3,10 +3,12 @@ package com.secondhandplatform.domain.user;
 import com.secondhandplatform.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @NoArgsConstructor
 public class Certification extends BaseEntity {
@@ -22,16 +24,13 @@ public class Certification extends BaseEntity {
 
     private LocalDateTime expiresAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Builder
-    private Certification(String email, String certificationNumber, LocalDateTime expiresAt) {
+    private Certification(String email, String certificationNumber) {
         this.email = email;
         this.certificationNumber = certificationNumber;
-        this.expiresAt = expiresAt;
+        this.expiresAt = LocalDateTime.now().plusMinutes(5);
     }
 
-
+    public static Certification create(String email, String certificationNumber) {
+        return new Certification(email, certificationNumber);
+    }
 }

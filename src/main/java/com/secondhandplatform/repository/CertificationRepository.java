@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CertificationRepository extends JpaRepository<Certification, Long> {
 
+    Certification findByEmail(String email);
 }

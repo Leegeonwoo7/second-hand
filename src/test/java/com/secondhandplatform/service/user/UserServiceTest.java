@@ -1,10 +1,14 @@
 package com.secondhandplatform.service.user;
 
 import com.secondhandplatform.api.request.user.DuplicateLoginIdRequest;
+import com.secondhandplatform.api.request.user.SendCertificationRequest;
+import com.secondhandplatform.domain.user.Certification;
 import com.secondhandplatform.domain.user.SignupType;
 import com.secondhandplatform.domain.user.User;
 import com.secondhandplatform.domain.user.UserType;
+import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.service.user.response.DuplicateLoginIdResponse;
+import com.secondhandplatform.service.user.response.SendCertificationResponse;
 import org.junit.jupiter.api.*;
 import com.secondhandplatform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +29,13 @@ class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CertificationRepository certificationRepository;
+
     @AfterEach
     void tearDown() {
         userRepository.deleteAllInBatch();
-
+        certificationRepository.deleteAllInBatch();
     }
 
     @Test
@@ -73,6 +80,25 @@ class UserServiceTest {
         //then
         assertThat(response).isInstanceOf(DuplicateLoginIdResponse.class);
         assertThat(response.getDuplicate()).isFalse();
+    }
+    
+    @Test
+    @Order(3)
+    @DisplayName("인증 이메일 요청시 이메일 전송과 동시에 해당 인증정보를 저장한다")
+    void sendCertification() {
+        // given
+        String email = "test@example.com";
+        SendCertificationRequest request = SendCertificationRequest.builder()
+                .email(email)
+                .build();
+
+        //when
+        SendCertificationResponse response = userService.sendCertification(request);
+        Certification findCertification = certificationRepository.findByEmail(email);
+
+        //then
+        assertThat(response.isSuccess()).isTrue();
+        assertThat(findCertification.getEmail()).isEqualTo(email);
     }
 
     private static User createUser(
