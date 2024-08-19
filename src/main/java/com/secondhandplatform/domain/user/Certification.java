@@ -30,6 +30,16 @@ public class Certification extends BaseEntity {
         this.expiresAt = LocalDateTime.now().plusMinutes(5);
     }
 
+    /*
+     * 테스트용 생성자
+     */
+    @Builder
+    private Certification(String email, String certificationNumber, LocalDateTime expiresAt) {
+        this.email = email;
+        this.certificationNumber = certificationNumber;
+        this.expiresAt = expiresAt;
+    }
+
     public static Certification create(String email, String certificationNumber) {
         return new Certification(email, certificationNumber);
     }

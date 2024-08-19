@@ -1,5 +1,6 @@
 package com.secondhandplatform.service.user;
 
+import com.secondhandplatform.api.request.user.CheckCertificationRequest;
 import com.secondhandplatform.api.request.user.DuplicateLoginIdRequest;
 import com.secondhandplatform.api.request.user.EmailCertificationRequest;
 import com.secondhandplatform.api.request.user.SendCertificationRequest;
@@ -8,15 +9,20 @@ import com.secondhandplatform.provider.CertificationNumber;
 import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.repository.UserRepository;
+import com.secondhandplatform.service.user.response.CheckCertificationResponse;
 import com.secondhandplatform.service.user.response.DuplicateLoginIdResponse;
 import com.secondhandplatform.service.user.response.EmailCertificationResponse;
 import com.secondhandplatform.service.user.response.SendCertificationResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -54,9 +60,29 @@ public class UserService {
         return SendCertificationResponse.success();
     }
 
-    /**
-     * 이메일 인증번호 검증을 수행한다.
-     * 검증시 전송된 이메일과 이메일 인증번호가 데이터베이스에 있는 Certification과 일치해야한다.
-     */
+    public CheckCertificationResponse checkCertification(CheckCertificationRequest request) {
+        String email = request.getEmail();
+        String certificationNumber = request.getCertificationNumber();
+        Certification findCertification = certificationRepository.findByEmail(email);
+
+        if (findCertification == null) {
+            log.warn("존재하지 않는 이메일: {}", email);
+            return CheckCertificationResponse.fail();
+        }
+
+        String targetEmail = findCertification.getEmail();
+        String targetCertificationNumber = findCertification.getCertificationNumber();
+        LocalDateTime expiresTime = findCertification.getExpiresAt();
+        if (LocalDateTime.now().isAfter(expiresTime)) {
+            log.warn("이메일 인증시간 초과: {}", expiresTime);
+            return CheckCertificationResponse.fail();
+        }
+
+        if (!(email.equals(targetEmail) && certificationNumber.equals(targetCertificationNumber))) {
+            return CheckCertificationResponse.fail();
+        }
+
+        return CheckCertificationResponse.success();
+    }
 
 }
