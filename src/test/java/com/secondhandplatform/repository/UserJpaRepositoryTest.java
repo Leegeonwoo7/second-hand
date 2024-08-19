@@ -24,75 +24,43 @@ class UserRepositoryTest {
         userRepository.deleteAllInBatch();
     }
 
-    @Test
-    @Order(1)
-    @DisplayName("회원을 저장한다.")
-    void save() {
-        // given
-        LocalDate birthdate = LocalDate.of(1998, 5, 1);
-        User userA = createUser("userA",
-                "1234",
-                "userA@example.com",
-                "01012341234",
-                birthdate,
-                UserType.USER,
-                SignupType.APP,
-                false);
+   @Test
+   @Order(1)
+   @DisplayName("이메일 인증시 이미 존재하는 이메일인지 확인한다 - 사용불가능한 이메일")
+   void existsByEmailSuccess() {
+       // given
+       LocalDate birthday = LocalDate.of(1998, 6, 2);
+       User userA = createUser("userA", "1234", "userA@email.com", "01012341234", birthday, UserType.USER, SignupType.APP, false);
+       userRepository.save(userA);
 
-        //when
-        User saveUser = userRepository.save(userA);
+       String existEmail = "userA@email.com";
 
-        //then
-        assertThat(saveUser.getId()).isEqualTo(1L);
-    }
+       //when
+       boolean result = userRepository.existsByEmail(existEmail);
+
+       //then
+       assertThat(result).isTrue();
+   }
 
     @Test
     @Order(2)
-    @DisplayName("이미 저장된 로그인 아이디인지 확인한다.")
-    void existsByLoginId() {
+    @DisplayName("이메일 인증시 이미 존재하는 이메일인지 확인한다 - 사용가능한 이메일")
+    void existsByEmailFail() {
         // given
-        String loginId = "userA";
-        User userA = createUser(loginId,
-                "1234",
-                "userA@example.com",
-                "01012341234",
-                LocalDate.now(),
-                UserType.USER,
-                SignupType.APP,
-                false);
-
+        LocalDate birthday = LocalDate.of(1998, 6, 2);
+        User userA = createUser("userA", "1234", "userA@email.com", "01012341234", birthday, UserType.USER, SignupType.APP, false);
         userRepository.save(userA);
 
-        //when
-        boolean result = userRepository.existsByLoginId(loginId);
-
-        //then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @Order(3)
-    @DisplayName("로그인 요청시 존재하는 회원인지 확인한다.")
-    void findByLoginIdSuccess() {
-        // given
-        String loginId = "userA";
-        User userA = createUser(loginId,
-                "1234",
-                "userA@example.com",
-                "01012341234",
-                LocalDate.now(),
-                UserType.USER,
-                SignupType.APP,
-                false);
-        userRepository.save(userA);
+        String existEmail = "new@email.com";
 
         //when
-        User user = userRepository.findByLoginId(loginId);
+        boolean result = userRepository.existsByEmail(existEmail);
 
         //then
-        assertNotNull(user);
-        assertThat(user.getLoginId()).isEqualTo(loginId);
+        assertThat(result).isFalse();
     }
+
+
 
 
     private static User createUser(

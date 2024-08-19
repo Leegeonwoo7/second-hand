@@ -13,10 +13,12 @@
 
     <div class="container mt-5">
         <h2 class="text-center">회원가입</h2>
-        <form th:action="@{/users/sign-up}" method="post">
+        <form th:action="@{/users/sig n-up}" method="post" th:object="${SignupReqeust}">
             <div class="mb-3">
                 <label for="loginId" class="form-label">로그인 ID</label>
-                <input type="text" class="form-control" id="loginId" name="loginId" placeholder="로그인 ID를 입력하세요" required>
+                <input type="text" class="form-control" th:field="*{loginId}" th:errorclass="field-error" id="loginId" placeholder="로그인 ID를 입력하세요" required>
+                <button th:onclick="|window.location.href='@{/users/sign-up}'|">중복체크</button>
+                <div th:errors="*{loginId}"></div>
             </div>
 
             <div class="mb-3">
