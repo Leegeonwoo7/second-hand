@@ -81,7 +81,6 @@ class UserRepositoryTest {
                 .birthday(birthday)
                 .userType(userType)
                 .signupType(signupType)
-                .emailVerified(emailVerified)
                 .build();
     }
 }
