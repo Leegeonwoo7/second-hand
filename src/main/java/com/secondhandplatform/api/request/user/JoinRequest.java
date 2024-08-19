@@ -5,6 +5,7 @@ import com.secondhandplatform.domain.user.User;
 import com.secondhandplatform.domain.user.UserType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +16,9 @@ public class JoinRequest {
 
     @NotBlank
     private String loginId;
+
     @NotBlank
+//    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=-]).{10,}$", message = "비밀번호는 반드시 특수문자, 영문자, 숫자 조합으로 10자리 이상이어야 합니다.")
     private String password;
 
     @Email
