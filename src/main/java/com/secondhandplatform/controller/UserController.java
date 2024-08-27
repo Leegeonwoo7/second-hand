@@ -1,5 +1,6 @@
 package com.secondhandplatform.controller;
 
+import com.secondhandplatform.dto.user.request.EmailCheckRequestDto;
 import com.secondhandplatform.dto.user.request.IdCheckRequestDto;
 import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
 import com.secondhandplatform.service.UserService;
@@ -18,8 +19,9 @@ public class UserController {
 
     @PostMapping("/id-check")
     public ResponseEntity<?> checkLoginId(@RequestBody IdCheckRequestDto request) {
+        String loginId = request.getLoginId();
 
-        IdCheckResponseDto idCheckResponseDto = userService.checkLoginIdAvailability(request);
+        IdCheckResponseDto idCheckResponseDto = userService.checkLoginIdAvailability(loginId);
         log.debug("[Controller] - 중복여부: {}", idCheckResponseDto.getMessage());
         boolean isDuplicate = idCheckResponseDto.isDuplicate();
 
@@ -30,4 +32,7 @@ public class UserController {
 
         return ResponseEntity.ok(idCheckResponseDto);
     }
+
+//    @PostMapping("/email-check")
+//    public ResponseEntity<?> checkEmail(@RequestBody EmailCheckRequestDto)
 }

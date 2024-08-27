@@ -1,6 +1,6 @@
 package com.secondhandplatform.service;
 
-import com.secondhandplatform.dto.user.request.IdCheckRequestDto;
+import com.secondhandplatform.dto.user.response.EmailCheckResponseDto;
 import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
 import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.repository.CertificationRepository;
@@ -24,8 +24,7 @@ public class UserService {
 
 
     //아이디 중복체크
-    public IdCheckResponseDto checkLoginIdAvailability(IdCheckRequestDto request) {
-        String loginId = request.getLoginId();
+    public IdCheckResponseDto checkLoginIdAvailability(String loginId) {
         boolean isExist = userRepository.existsByLoginId(loginId); //이미존재하면 true반환
 
         if (isExist) { //이미 존재하는 아이디라면,
@@ -45,7 +44,32 @@ public class UserService {
                 .build();
     }
 
-//    public SendCertificationResponse sendCertification(SendCertificationRequest request) {
+    // 이메일 중복여부 확인
+    public EmailCheckResponseDto checkEmailAvailability(String email) {
+        boolean isExist = userRepository.existsByEmail(email);
+
+        if (isExist) {
+            return EmailCheckResponseDto.builder()
+                    .isExist(true)
+                    .message("이미 존재하는 이메일 입니다.")
+                    .email(email)
+                    .build();
+        }
+
+        return EmailCheckResponseDto.builder()
+                .isExist(false)
+                .message("사용 가능한 이메일 입니다.")
+                .email(email)
+                .build();
+    }
+
+    // 이메일 인증번호를 전송함과 동시에 아이디 중복체크와 이메일 중복체크를 수행
+//    public CertificationCodeResponseDto sendCertificationCode(CertificationCodeRequestDto request) {
+//        request.getEmail()
+//    }
+
+
+    //    public SendCertificationResponse sendCertification(SendCertificationRequest request) {
 //        String email = request.getEmail();
 //        String certificationNumber = CertificationNumber.createCertificationNumber();
 //
