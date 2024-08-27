@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class IdCheckResponseDto {
 
-    private boolean isSuccess;
+    private boolean isDuplicate;
     private String message;
     private String loginId;
 }

@@ -26,12 +26,12 @@ public class UserService {
     //아이디 중복체크
     public IdCheckResponseDto checkLoginIdAvailability(IdCheckRequestDto request) {
         String loginId = request.getLoginId();
-        boolean isExist = userRepository.existsByLoginId(loginId);
+        boolean isExist = userRepository.existsByLoginId(loginId); //이미존재하면 true반환
 
         if (isExist) { //이미 존재하는 아이디라면,
             log.debug("요청아이디: {}", loginId);
             return IdCheckResponseDto.builder()
-                    .isSuccess(false)
+                    .isDuplicate(true)
                     .message("이미 존재하는 아이디입니다.")
                     .loginId(loginId)
                     .build();
@@ -39,7 +39,7 @@ public class UserService {
 
         log.debug("[UserService] request loginId: {}", loginId);
         return IdCheckResponseDto.builder()
-                .isSuccess(true)
+                .isDuplicate(false)
                 .message("사용 가능한 아이디입니다.")
                 .loginId(loginId)
                 .build();

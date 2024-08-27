@@ -20,7 +20,8 @@ public class UserController {
     public ResponseEntity<?> checkLoginId(@RequestBody IdCheckRequestDto request) {
 
         IdCheckResponseDto idCheckResponseDto = userService.checkLoginIdAvailability(request);
-        boolean isDuplicate = idCheckResponseDto.isSuccess();
+        log.debug("[Controller] - 중복여부: {}", idCheckResponseDto.getMessage());
+        boolean isDuplicate = idCheckResponseDto.isDuplicate();
 
         if (isDuplicate) {
             return ResponseEntity.badRequest()

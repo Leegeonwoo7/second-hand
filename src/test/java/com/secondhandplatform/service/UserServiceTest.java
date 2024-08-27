@@ -45,7 +45,7 @@ class UserServiceTest {
 
         //then
         assertThat(idCheckResponseDto.getLoginId()).isEqualTo("test");
-        assertThat(idCheckResponseDto.isSuccess()).isTrue();
+        assertThat(idCheckResponseDto.isDuplicate()).isFalse();
         assertThat(idCheckResponseDto.getMessage()).isEqualTo("사용 가능한 아이디입니다.");
     }
 
@@ -65,7 +65,7 @@ class UserServiceTest {
         IdCheckResponseDto idCheckResponseDto = userService.checkLoginIdAvailability(request);
 
         // then
-        assertThat(idCheckResponseDto.isSuccess()).isFalse();
+        assertThat(idCheckResponseDto.isDuplicate()).isTrue();
         assertThat(idCheckResponseDto.getMessage()).isEqualTo("이미 존재하는 아이디입니다.");
         assertThat(idCheckResponseDto.getLoginId()).isEqualTo(existLoginId);
     }
