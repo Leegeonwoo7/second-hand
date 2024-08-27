@@ -52,12 +52,12 @@ public class JoinRequest {
     }
 
     // TODO 유저타입, 가입경로 임시설정
-    public User toEntity() {
+    public User toEntity(String securityPassword) {
         String nameToUse = this.name == null ? loginId : name;
 
         return User.builder()
                 .loginId(this.loginId)
-                .password(this.password)
+                .password(securityPassword)
                 .email(this.email)
                 .phone(this.phone)
                 .birthday(this.birthday)

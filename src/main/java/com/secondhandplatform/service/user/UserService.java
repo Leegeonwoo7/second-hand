@@ -11,6 +11,7 @@ import com.secondhandplatform.service.user.response.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailProvider emailProvider;
     private final CertificationRepository certificationRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     public DuplicateLoginIdResponse validateLoginId(DuplicateLoginIdRequest request) {
         String loginId = request.getLoginId();
@@ -85,6 +88,7 @@ public class UserService {
     public UserResponse join(JoinRequest request) {
         String certificationNumber = request.getCertificationNumber();
         String email = request.getEmail();
+        String encodePassword = bCryptPasswordEncoder.encode(request.getPassword());
 
         Certification findCertification = certificationRepository.findByEmail(email);
         String targetEmail = findCertification.getEmail();
@@ -95,10 +99,14 @@ public class UserService {
             return null;
         }
 
-        User saveUser = userRepository.save(request.toEntity());
+        User saveUser = userRepository.save(request.toEntity(encodePassword));
         return UserResponse.of(saveUser);
     }
 
+    public LoginResponse login(LoginRequest request) {
+        String loginId = request.getLoginId();
+        String password = request.getPassword();
 
-
+        return null;
+    }
 }
