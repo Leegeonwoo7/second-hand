@@ -36,8 +36,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // security
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // utils
     compileOnly 'org.projectlombok:lombok'
