@@ -2,7 +2,10 @@ package com.secondhandplatform.service;
 
 import static org.mockito.Mockito.*;
 
+import com.secondhandplatform.domain.user.Certification;
+import com.secondhandplatform.dto.user.request.CertificationCheckRequestDto;
 import com.secondhandplatform.dto.user.request.CertificationCodeRequestDto;
+import com.secondhandplatform.dto.user.response.CertificationCheckResponseDto;
 import com.secondhandplatform.dto.user.response.CertificationCodeResponseDto;
 import com.secondhandplatform.dto.user.response.EmailCheckResponseDto;
 import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
@@ -165,6 +168,80 @@ class UserServiceTest {
             // then
             assertThat(response.isSuccess()).isFalse();
         }
+    }
 
+    @Test
+    @Order(7)
+    @DisplayName("인증번호 검증에 성공한다.")
+    void certificationCheckSuccess() {
+        // given
+        String email = "test@example.com";
+        String certificationCode = "1234";
+
+        CertificationCheckRequestDto request = CertificationCheckRequestDto.builder()
+                .email(email)
+                .certificationCode(certificationCode)
+                .build();
+
+        Certification certification = Certification.create(email, certificationCode);
+
+        when(certificationRepository.findByEmail(email)).thenReturn(certification);
+
+        //when
+        CertificationCheckResponseDto response = userService.certificationCheck(request);
+
+        //then
+        assertThat(response.isSuccess()).isTrue();
+        assertThat(response.getMessage()).isEqualTo("인증 성공");
+
+        verify(certificationRepository, times(1)).delete(certification);
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("유효하지 않은 이메일로 검증에 실패한다.")
+    void certificationCheckFalse() {
+        // given
+        String email = "test@example.com";
+        String certificationCode = "1234";
+
+        CertificationCheckRequestDto request = CertificationCheckRequestDto.builder()
+                .email(email)
+                .certificationCode(certificationCode)
+                .build();
+
+        Certification certification = Certification.create(email, certificationCode);
+
+        when(certificationRepository.findByEmail(email)).thenReturn(null);
+
+        //when
+        CertificationCheckResponseDto response = userService.certificationCheck(request);
+
+        //then
+        assertThat(response.isSuccess()).isFalse();
+    }
+
+    //TODO 만료시간을 어떻게 임의로 변경하지??
+    @Test
+    @Order(9)
+    @DisplayName("인증시간을 초과하여 검증에 실패한다.")
+    void certificationCheckFail2() {
+        // given
+        String email = "test@example.com";
+        String certificationCode = "1234";
+
+        CertificationCheckRequestDto request = CertificationCheckRequestDto.builder()
+                .email(email)
+                .certificationCode(certificationCode)
+                .build();
+
+        Certification certification = Certification.create(email, certificationCode);
+
+        when(certificationRepository.findByEmail(email)).thenReturn(certification);
+
+        //when
+
+
+        //then
     }
 }
