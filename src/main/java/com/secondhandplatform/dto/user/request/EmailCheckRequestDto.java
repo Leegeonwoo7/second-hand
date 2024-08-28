@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EmailCheckRequestDto {
 
-    private String loginId;
     private String email;
 }

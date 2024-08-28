@@ -20,13 +20,13 @@ public class Certification extends BaseEntity {
     private String email;
 
     @Column(length = 4)
-    private String certificationNumber;
+    private String certificationCode;
 
     private LocalDateTime expiresAt;
 
     private Certification(String email, String certificationNumber) {
         this.email = email;
-        this.certificationNumber = certificationNumber;
+        this.certificationCode = certificationNumber;
         this.expiresAt = LocalDateTime.now().plusMinutes(5);
     }
 
@@ -36,7 +36,7 @@ public class Certification extends BaseEntity {
     @Builder
     private Certification(String email, String certificationNumber, LocalDateTime expiresAt) {
         this.email = email;
-        this.certificationNumber = certificationNumber;
+        this.certificationCode = certificationNumber;
         this.expiresAt = expiresAt;
     }
 

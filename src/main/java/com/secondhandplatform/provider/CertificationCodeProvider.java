@@ -1,8 +1,6 @@
 package com.secondhandplatform.provider;
 
-import lombok.Getter;
-
-public class CertificationNumber {
+public class CertificationCodeProvider {
 
     public static String createCertificationNumber() {
 

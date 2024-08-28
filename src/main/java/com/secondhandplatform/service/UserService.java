@@ -1,7 +1,11 @@
 package com.secondhandplatform.service;
 
+import com.secondhandplatform.domain.user.Certification;
+import com.secondhandplatform.dto.user.request.CertificationCodeRequestDto;
+import com.secondhandplatform.dto.user.response.CertificationCodeResponseDto;
 import com.secondhandplatform.dto.user.response.EmailCheckResponseDto;
 import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
+import com.secondhandplatform.provider.CertificationCodeProvider;
 import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.repository.UserRepository;
@@ -64,9 +68,45 @@ public class UserService {
     }
 
     // 이메일 인증번호를 전송함과 동시에 아이디 중복체크와 이메일 중복체크를 수행
-//    public CertificationCodeResponseDto sendCertificationCode(CertificationCodeRequestDto request) {
-//        request.getEmail()
-//    }
+    // TODO 반환타입을 인터페이스로?
+    public CertificationCodeResponseDto sendCertificationCode(CertificationCodeRequestDto request) {
+        String email = request.getEmail();
+        String loginId = request.getLoginId();
+
+        EmailCheckResponseDto emailResponse = checkEmailAvailability(email);
+        IdCheckResponseDto idResponse = checkLoginIdAvailability(loginId);
+
+        if (emailResponse.isExist() || idResponse.isDuplicate()) {
+            return CertificationCodeResponseDto.builder()
+                    .isSuccess(false)
+                    .message("아이디 또는 이메일 검증 수행이 필요합니다.")
+                    .email(email)
+                    .loginId(loginId)
+                    .build();
+        }
+
+        String code = CertificationCodeProvider.createCertificationNumber();
+
+        boolean sendResult = emailProvider.sendMail(email, code);
+        if (!sendResult) {
+            return CertificationCodeResponseDto.builder()
+                    .isSuccess(false)
+                    .message("이메일 전송에 실패했습니다.")
+                    .email(email)
+                    .loginId(loginId)
+                    .build();
+        }
+
+        Certification certificationEntity = Certification.create(email, code);
+        certificationRepository.save(certificationEntity);
+
+        return CertificationCodeResponseDto.builder()
+                .isSuccess(true)
+                .message("인증메일 전송 완료")
+                .email(email)
+                .loginId(loginId)
+                .build();
+    }
 
 
     //    public SendCertificationResponse sendCertification(SendCertificationRequest request) {
