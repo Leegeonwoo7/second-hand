@@ -2,14 +2,16 @@ package com.secondhandplatform.service;
 
 import static org.mockito.Mockito.*;
 
+import com.secondhandplatform.dto.user.request.CertificationCodeRequestDto;
+import com.secondhandplatform.dto.user.response.CertificationCodeResponseDto;
 import com.secondhandplatform.dto.user.response.EmailCheckResponseDto;
 import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
+import com.secondhandplatform.provider.CertificationCodeProvider;
+import com.secondhandplatform.provider.EmailProvider;
+import com.secondhandplatform.repository.CertificationRepository;
 import com.secondhandplatform.repository.UserRepository;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -18,6 +20,12 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private EmailProvider emailProvider;
+
+    @Mock
+    private CertificationRepository certificationRepository;
 
     @InjectMocks
     private UserService userService;
@@ -97,5 +105,66 @@ class UserServiceTest {
         assertThat(emailCheckResponseDto.getEmail()).isEqualTo(existEmail);
         assertThat(emailCheckResponseDto.isExist()).isTrue();
         assertThat(emailCheckResponseDto.getMessage()).isEqualTo("이미 존재하는 이메일 입니다.");
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("이메일 인증 전송을 성공한다")
+    void sendEmailSuccess() {
+        // given
+        String email = "test@example.com";
+        String loginId = "loginId";
+
+        CertificationCodeRequestDto request = CertificationCodeRequestDto.builder()
+                .email(email)
+                .loginId(loginId)
+                .build();
+
+        when(userRepository.existsByEmail(email)).thenReturn(false);
+        when(userRepository.existsByLoginId(loginId)).thenReturn(false);
+
+        try (MockedStatic<CertificationCodeProvider> mockedStatic = mockStatic(CertificationCodeProvider.class)) {
+            mockedStatic.when(CertificationCodeProvider::createCertificationNumber).thenReturn("1234");
+
+            when(emailProvider.sendMail(email, "1234")).thenReturn(true);
+
+            // when
+            CertificationCodeResponseDto response = userService.sendCertificationCode(request);
+
+            // then
+            assertThat(response.isSuccess()).isTrue();
+        }
+
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("이메일 인증 전송을 실패한다")
+    void sendEmailFail() {
+        // given
+        String email = "test@example.com";
+        String loginId = "loginId";
+
+        CertificationCodeRequestDto request = CertificationCodeRequestDto.builder()
+                .email(email)
+                .loginId(loginId)
+                .build();
+
+        when(userRepository.existsByEmail(email)).thenReturn(false);
+        when(userRepository.existsByLoginId(loginId)).thenReturn(false);
+
+        try (MockedStatic<CertificationCodeProvider> mockedStatic = mockStatic(CertificationCodeProvider.class)) {
+            mockedStatic.when(CertificationCodeProvider::createCertificationNumber).thenReturn("1234");
+
+            // 이메일 전송 실패
+            when(emailProvider.sendMail(email, "1234")).thenReturn(false);
+
+            // when
+            CertificationCodeResponseDto response = userService.sendCertificationCode(request);
+
+            // then
+            assertThat(response.isSuccess()).isFalse();
+        }
+
     }
 }
