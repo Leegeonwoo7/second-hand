@@ -1,7 +1,9 @@
 package com.secondhandplatform.service;
 
 import com.secondhandplatform.domain.user.Certification;
+import com.secondhandplatform.dto.user.request.CertificationCheckRequestDto;
 import com.secondhandplatform.dto.user.request.CertificationCodeRequestDto;
+import com.secondhandplatform.dto.user.response.CertificationCheckResponseDto;
 import com.secondhandplatform.dto.user.response.CertificationCodeResponseDto;
 import com.secondhandplatform.dto.user.response.EmailCheckResponseDto;
 import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
@@ -13,7 +15,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -108,25 +113,38 @@ public class UserService {
                 .build();
     }
 
+    // 인증번호 검증
+    public CertificationCheckResponseDto certificationCheck(CertificationCheckRequestDto request) {
+        String certificationCode = request.getCertificationCode();
+        String email = request.getEmail();
 
-    //    public SendCertificationResponse sendCertification(SendCertificationRequest request) {
-//        String email = request.getEmail();
-//        String certificationNumber = CertificationNumber.createCertificationNumber();
-//
-//        try {
-//            emailProvider.sendMail(email, certificationNumber);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.warn("외부 이메일 전송 에러");
-//            return SendCertificationResponse.fail();
-//        }
-//
-//        Certification certification = Certification.create(email, certificationNumber);
-//        certificationRepository.save(certification);
-//
-//        return SendCertificationResponse.success();
-//    }
+        Certification targetCertification = certificationRepository.findByEmail(email);
+        if (targetCertification == null) {
+            return CertificationCheckResponseDto.builder()
+                    .isSuccess(false)
+                    .message("유효한 이메일이 아닙니다.")
+                    .build();
+        }
+
+        String targetCode = targetCertification.getCertificationCode();
+        String targetEmail = targetCertification.getEmail();
+        LocalDateTime targetExpiresAt = targetCertification.getExpiresAt();
+
+        if (targetEmail.equals(email) && targetCode.equals(certificationCode) && targetExpiresAt.isAfter(LocalDateTime.now())) {
+            certificationRepository.delete(targetCertification);
+
+            return CertificationCheckResponseDto.builder()
+                    .isSuccess(true)
+                    .message("인증 성공")
+                    .build();
+        }
+
+        return CertificationCheckResponseDto.builder()
+                .isSuccess(false)
+                .message("인증 실패")
+                .build();
+    }
+
 //
 //    public CheckCertificationResponse checkCertification(CheckCertificationRequest request) {
 //        String email = request.getEmail();
