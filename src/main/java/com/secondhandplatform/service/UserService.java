@@ -120,81 +120,36 @@ public class UserService {
 
         Certification targetCertification = certificationRepository.findByEmail(email);
         if (targetCertification == null) {
-            return CertificationCheckResponseDto.builder()
-                    .isSuccess(false)
-                    .message("유효한 이메일이 아닙니다.")
-                    .build();
+            return createResponse(false, "유효한 이메일이 아닙니다.");
         }
 
         String targetCode = targetCertification.getCertificationCode();
         String targetEmail = targetCertification.getEmail();
         LocalDateTime targetExpiresAt = targetCertification.getExpiresAt();
 
-        if (targetEmail.equals(email) && targetCode.equals(certificationCode) && targetExpiresAt.isAfter(LocalDateTime.now())) {
-            certificationRepository.delete(targetCertification);
-
-            return CertificationCheckResponseDto.builder()
-                    .isSuccess(true)
-                    .message("인증 성공")
-                    .build();
+        if (!targetEmail.equals(email)) {
+            return createResponse(false, "유효한 이메일이 아닙니다.");
         }
 
-        return CertificationCheckResponseDto.builder()
-                .isSuccess(false)
-                .message("인증 실패")
-                .build();
+        if (!targetCode.equals(certificationCode)) {
+            return createResponse(false, "잘못된 인증번호 입니다.");
+        }
+
+        if (targetExpiresAt.isBefore(LocalDateTime.now())) {
+            return createResponse(false, "만료된 인증번호 입니다.");
+        }
+
+        certificationRepository.delete(targetCertification);
+        return createResponse(true, "인증 성공");
     }
 
-//
-//    public CheckCertificationResponse checkCertification(CheckCertificationRequest request) {
-//        String email = request.getEmail();
-//        String certificationNumber = request.getCertificationNumber();
-//        Certification findCertification = certificationRepository.findByEmail(email);
-//
-//        if (findCertification == null) {
-//            log.warn("존재하지 않는 이메일: {}", email);
-//            return CheckCertificationResponse.fail();
-//        }
-//
-//        String targetEmail = findCertification.getEmail();
-//        String targetCertificationNumber = findCertification.getCertificationNumber();
-//        LocalDateTime expiresTime = findCertification.getExpiresAt();
-//
-//        if (LocalDateTime.now().isAfter(expiresTime)) {
-//            log.warn("이메일 인증시간 초과: {}", expiresTime);
-//            return CheckCertificationResponse.fail();
-//        }
-//
-//        if (!(email.equals(targetEmail) && certificationNumber.equals(targetCertificationNumber))) {
-//            return CheckCertificationResponse.fail();
-//        }
-//
-//        return CheckCertificationResponse.success();
-//    }
-//
-//    // TODO 회원가입 실패시 null을 반환해도 괜찮을까?
-//    public UserResponse join(JoinRequest request) {
-//        String certificationNumber = request.getCertificationNumber();
-//        String email = request.getEmail();
-//        String encodePassword = bCryptPasswordEncoder.encode(request.getPassword());
-//
-//        Certification findCertification = certificationRepository.findByEmail(email);
-//        String targetEmail = findCertification.getEmail();
-//        String targetCertificationNumber = findCertification.getCertificationNumber();
-//
-//        if (!(certificationNumber.equals(targetCertificationNumber) && email.equals(targetEmail))) {
-//            log.warn("회원가입 정보가 일치하지 않습니다.");
-//            return null;
-//        }
-//
-//        User saveUser = userRepository.save(request.toEntity(encodePassword));
-//        return UserResponse.of(saveUser);
-//    }
-//
-//    public LoginResponse login(LoginRequest request) {
-//        String loginId = request.getLoginId();
-//        String password = request.getPassword();
-//
-//        return null;
-//    }
+    // TODO
+    // Certification,,EmailCheck,,,IdCheck,,,Response 모든 Response들이 비슷한 형태로 리턴되며 반복되는 코드 발생
+    // 다형성으로 해결?
+    private static CertificationCheckResponseDto createResponse(boolean isSuccess, String message) {
+        return CertificationCheckResponseDto.builder()
+                .isSuccess(isSuccess)
+                .message(message)
+                .build();
+    }
 }

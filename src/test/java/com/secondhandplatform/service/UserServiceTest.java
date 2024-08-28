@@ -191,6 +191,8 @@ class UserServiceTest {
         CertificationCheckResponseDto response = userService.certificationCheck(request);
 
         //then
+        System.out.println(certification.getExpiresAt());
+        System.out.println(response.getMessage());
         assertThat(response.isSuccess()).isTrue();
         assertThat(response.getMessage()).isEqualTo("인증 성공");
 
@@ -244,4 +246,6 @@ class UserServiceTest {
 
         //then
     }
+
+
 }
