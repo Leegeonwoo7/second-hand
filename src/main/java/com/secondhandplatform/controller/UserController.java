@@ -1,8 +1,10 @@
 package com.secondhandplatform.controller;
 
+import com.secondhandplatform.dto.user.request.CertificationCheckRequestDto;
 import com.secondhandplatform.dto.user.request.CertificationCodeRequestDto;
 import com.secondhandplatform.dto.user.request.EmailCheckRequestDto;
 import com.secondhandplatform.dto.user.request.IdCheckRequestDto;
+import com.secondhandplatform.dto.user.response.CertificationCheckResponseDto;
 import com.secondhandplatform.dto.user.response.CertificationCodeResponseDto;
 import com.secondhandplatform.dto.user.response.EmailCheckResponseDto;
 import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
@@ -50,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/email-certification")
+    @GetMapping("/email-certification")
     public ResponseEntity<?> sendCertificationEmail(@RequestBody CertificationCodeRequestDto request) {
         CertificationCodeResponseDto response = userService.sendCertificationCode(request);
 
@@ -62,6 +64,20 @@ public class UserController {
         // 응답에 대한 유연성, 확장성 부족
         return ResponseEntity.badRequest().body(response);
     }
+
+    @PostMapping("/email-certification")
+    public ResponseEntity<?> certificationCodeCheck(@RequestBody CertificationCheckRequestDto request) {
+
+        CertificationCheckResponseDto response = userService.certificationCheck(request);
+
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.badRequest()
+                .body(response);
+    }
+
 
 
 }
