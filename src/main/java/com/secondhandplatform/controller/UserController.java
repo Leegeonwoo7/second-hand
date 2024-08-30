@@ -1,13 +1,7 @@
 package com.secondhandplatform.controller;
 
-import com.secondhandplatform.dto.user.request.CertificationCheckRequestDto;
-import com.secondhandplatform.dto.user.request.CertificationCodeRequestDto;
-import com.secondhandplatform.dto.user.request.EmailCheckRequestDto;
-import com.secondhandplatform.dto.user.request.IdCheckRequestDto;
-import com.secondhandplatform.dto.user.response.CertificationCheckResponseDto;
-import com.secondhandplatform.dto.user.response.CertificationCodeResponseDto;
-import com.secondhandplatform.dto.user.response.EmailCheckResponseDto;
-import com.secondhandplatform.dto.user.response.IdCheckResponseDto;
+import com.secondhandplatform.dto.user.request.*;
+import com.secondhandplatform.dto.user.response.*;
 import com.secondhandplatform.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +72,31 @@ public class UserController {
                 .body(response);
     }
 
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody CreateUserRequestDto request) {
+        CreateUserResponseDto response = userService.join(request);
 
+        if (response.getId() == null) {
+            return ResponseEntity.badRequest()
+                    .body(response);
+        }
 
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto request) {
+        LoginResponseDto response;
+
+        try {
+            response = userService.login(request);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500)
+                    .body(null);
+        }
+
+        return ResponseEntity.ok(response);
+    }
 }
