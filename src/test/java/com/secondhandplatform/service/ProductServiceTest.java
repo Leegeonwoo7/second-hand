@@ -44,6 +44,9 @@ class ProductServiceTest {
         ProductResponse product = productService.register(request, userA.getLoginId());
 
         //then
+        User user = userRepository.findByLoginId("userA");
+
+        assertThat(user.getLoginId()).isEqualTo("userA");
         assertThat(product.getUserId()).isEqualTo(savedUser.getId());
         assertThat(product.getName()).isEqualTo("아이패드");
     }
