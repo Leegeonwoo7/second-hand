@@ -18,11 +18,13 @@ public class SecurityConfig {
 
     private final AuthenticationFilter authenticationFilter;
 
+    //TODO 현재 모든 요청에대해서 authenticationFilter가 동작하는데 부분적으로 작동하도록 설정하기 옵시디언 필터 메모 참고
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/", "/users/**").permitAll()
+                .anyRequest().authenticated()
         );
 
         http.csrf(AbstractHttpConfigurer::disable)

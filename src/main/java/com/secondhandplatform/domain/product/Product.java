@@ -1,6 +1,7 @@
 package com.secondhandplatform.domain.product;
 
 import com.secondhandplatform.domain.BaseEntity;
+import com.secondhandplatform.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,10 @@ public class Product extends BaseEntity {
     @Column(name = "product_id")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "product_name", length = 50, nullable = false)
     private String name;
@@ -50,5 +55,11 @@ public class Product extends BaseEntity {
         this.category = category;
         this.productStatus = productStatus;
         this.sellingStatus = sellingStatus;
+    }
+
+    //연관관계 편의 메서드
+    //TODO 양방향 매핑시 메서드 수정필요
+    public void registerBy(User user) {
+        this.user = user;
     }
 }
