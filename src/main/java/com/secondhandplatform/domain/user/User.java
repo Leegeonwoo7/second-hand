@@ -4,10 +4,7 @@ import com.secondhandplatform.domain.BaseEntity;
 import com.secondhandplatform.domain.favorite.Favorite;
 import com.secondhandplatform.domain.follow.Follow;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Table(name = "users")
+@ToString
 public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
