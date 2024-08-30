@@ -36,8 +36,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // security
-//    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
     // utils
     compileOnly 'org.projectlombok:lombok'
