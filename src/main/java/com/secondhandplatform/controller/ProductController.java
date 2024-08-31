@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +35,11 @@ public class ProductController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getProducts(@PathVariable Long userId) {
+        List<ProductResponse> products = productService.findProducts(userId);
+        return ResponseEntity.ok(products);
     }
 }
