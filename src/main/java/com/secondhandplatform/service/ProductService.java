@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @Transactional
@@ -31,5 +33,16 @@ public class ProductService {
         savedProduct.registerBy(findUser);
 
         return ProductResponse.of(savedProduct);
+    }
+
+    public ProductResponse findProduct(Long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.isEmpty()) {
+            log.info("findProduct - 존재하지 않는 productId");
+            return null;
+        }
+
+        return ProductResponse.of(product.get());
     }
 }

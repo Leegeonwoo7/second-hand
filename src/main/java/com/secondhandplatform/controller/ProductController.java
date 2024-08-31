@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -22,9 +19,19 @@ public class ProductController {
 
     @PostMapping("/new")
     public ResponseEntity<?> registerProduct(@RequestBody ProductSaveRequest request, @AuthenticationPrincipal String loginId) {
-        log.debug("ProductController - token userId: {}", loginId);
-
         ProductResponse response = productService.register(request, loginId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("{productId}")
+    public ResponseEntity<?> getProduct(@PathVariable Long productId) {
+        ProductResponse response = productService.findProduct(productId);
+
+        if (response == null) {
+            return ResponseEntity.badRequest()
+                    .body(null);
+        }
+
         return ResponseEntity.ok(response);
     }
 }
