@@ -182,6 +182,9 @@ public class UserService {
                     .message("존재하지 않는 아이디입니다.")
                     .build();
         }
+
+        Long userId = user.getId();
+
         if (!(bCryptPasswordEncoder.matches(password, user.getPassword()))) {
             return LoginResponseDto
                     .builder()
@@ -190,7 +193,7 @@ public class UserService {
                     .build();
         }
 
-        String token = tokenProvider.create(loginId);
+        String token = tokenProvider.create(userId);
         return LoginResponseDto
                 .builder()
                 .token(token)

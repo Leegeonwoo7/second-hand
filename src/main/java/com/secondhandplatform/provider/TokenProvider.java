@@ -20,14 +20,14 @@ public class TokenProvider {
     @Value("${secret-key}")
     private String secretKey;
 
-    public String create(String loginId) {
+    public String create(Long userId) {
         Date expiredDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
 
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS256)
-                .setSubject(loginId)
+                .setSubject(userId.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(expiredDate)
                 .compact();

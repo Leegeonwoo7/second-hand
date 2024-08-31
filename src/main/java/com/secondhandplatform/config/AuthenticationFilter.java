@@ -23,6 +23,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -34,7 +35,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.debug("Start my filter...");
+        log.debug("Start my filter ...");
 
         try {
             String token = parseBearerToken(request);
@@ -43,13 +44,23 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String loginId = tokenProvider.validate(token);
-            if (loginId == null) {
-                log.debug("tokenProvider.validate: {}", loginId);
+            String userId = tokenProvider.validate(token);
+            if (userId == null) {
+                log.debug("tokenProvider.validate: {}", userId);
                 filterChain.doFilter(request, response);
             }
 
-            User user = userRepository.findByLoginId(loginId);
+            Optional<User> optionalUser = userRepository.findById(Long.valueOf(userId));
+
+            User user;
+
+            if (optionalUser.isPresent()) {
+                user = optionalUser.get();
+            } else {
+                log.warn("optionalUser가 null입니다.");
+                throw new RuntimeException();
+            }
+
             String role = user.getUserType()
                     .toString();
             log.debug("user.getRole.toString: {}", role);
@@ -58,7 +69,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             authorities.add(new SimpleGrantedAuthority(role));
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginId, null, authorities);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getLoginId(), null, authorities);
 
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
