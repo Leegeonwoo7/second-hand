@@ -8,9 +8,12 @@ import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.provider.TokenProvider;
 import com.secondhandplatform.user.domain.Certification;
 import com.secondhandplatform.user.domain.CertificationRepository;
+import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
 import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
+import com.secondhandplatform.user.dto.request.JoinRequest;
+import com.secondhandplatform.user.dto.response.JoinResponse;
 import com.secondhandplatform.user.dto.response.Response;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -89,6 +92,10 @@ public class UserService {
         String targetEmail = request.getEmail();
 
         Certification findCertification = certificationRepository.findByEmail(targetEmail);
+        if (findCertification == null) {
+            throw new BadRequestException(WRONG_EMAIL);
+        }
+
         String findEmail = findCertification.getEmail();
         String findCode = findCertification.getCertificationCode();
 
@@ -104,14 +111,27 @@ public class UserService {
     }
 
     //회원가입
-//    public CreateUserResponseDto join(CreateUserRequestDto request) {
-//
-//    }
+    public JoinResponse join(JoinRequest request) {
+        String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+        request.setPassword(encodedPassword);
+
+        if (encodedPassword.length() < 30) {
+            log.error("비밀번호 인코딩이 잘못됨");
+            throw new RuntimeException("비밀번호 인코딩이 잘못됨");
+        }
+
+        User user = request.toEntity();
+        log.info("비밀번호: {}", user.getPassword());
+
+        User savedUser = userRepository.save(user);
+
+        return JoinResponse.from(savedUser);
+    }
 
     // 로그인
-//    public LoginResponseDto login(LoginRequestDto request) {
-//
-//    }
+    public LoginResponseDto login(LoginRequestDto request) {
+
+    }
 
 
 }
