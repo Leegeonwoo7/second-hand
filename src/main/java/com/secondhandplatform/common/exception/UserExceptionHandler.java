@@ -13,4 +13,11 @@ public class UserExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(errorResult);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> mailSendExceptionHandler(MailSendException e) {
+        ErrorResult errorResult = new ErrorResult(e.getMessage());
+        return ResponseEntity.status(500)
+                .body(errorResult);
+    }
 }

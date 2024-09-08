@@ -2,6 +2,7 @@ package com.secondhandplatform.user.controller;
 
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
+import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.request.UsernameCheckRequest;
 import com.secondhandplatform.user.dto.response.Response;
 import com.secondhandplatform.user.service.UserService;
@@ -33,10 +34,12 @@ public class UserController {
 //
 //    }
 //
-//    @GetMapping("/email-certification")
-//    public ResponseEntity<?> sendCertificationEmail(@RequestBody CertificationCodeRequestDto request) {
-//
-//    }
+    @GetMapping("/email-certification")
+    public ResponseEntity<?> sendCertificationEmail(@RequestBody CertificationCodeRequest request) {
+        Response response = userService.sendCertificationCode(request);
+
+        return ResponseEntity.ok(response);
+    }
 //
 //    @PostMapping("/email-certification")
 //

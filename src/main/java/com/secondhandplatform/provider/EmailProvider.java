@@ -17,12 +17,12 @@ public class EmailProvider {
     private final String SUBJECT = "[Second Hand] 인증 이메일 번호입니다.";
 
 
-    public boolean sendMail(String email, String certificationNumber) {
+    public boolean sendMail(String email, String certificationCode) {
         try{
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
 
-            String htmlContent = getCertificationMessage(certificationNumber);
+            String htmlContent = getCertificationMessage(certificationCode);
 
             messageHelper.setTo(email);
             messageHelper.setSubject(SUBJECT);

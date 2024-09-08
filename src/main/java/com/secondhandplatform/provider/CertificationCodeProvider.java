@@ -2,14 +2,14 @@ package com.secondhandplatform.provider;
 
 public class CertificationCodeProvider {
 
-    public static String createCertificationNumber() {
+    public static String createCertificationCode() {
 
-        StringBuilder certificationNumber = new StringBuilder();
+        StringBuilder certificationCode = new StringBuilder();
 
         for (int count = 0; count < 4; count++) {
-            certificationNumber.append((int) (Math.random() * 10));
+            certificationCode.append((int) (Math.random() * 10));
         }
 
-        return certificationNumber.toString();
+        return certificationCode.toString();
     }
 }
