@@ -8,7 +8,9 @@ import com.secondhandplatform.user.domain.*;
 import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.request.JoinRequest;
+import com.secondhandplatform.user.dto.request.LoginRequest;
 import com.secondhandplatform.user.dto.response.JoinResponse;
+import com.secondhandplatform.user.dto.response.LoginResponse;
 import com.secondhandplatform.user.dto.response.Response;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -202,6 +204,32 @@ class UserServiceTest {
         JoinResponse response = userService.join(req);
 
         //then
+        assertThat(response.getPassword()
+                .length()).isGreaterThan(30);
         assertThat(response.getUserId()).isEqualTo(1L);
+    }
+    
+    @Test
+    @DisplayName("로그인에 성공한다.")
+    void login() {
+        //give
+        String username = "userA";
+        String password = "1234";
+
+        JoinRequest joinRequest = JoinRequest.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        JoinResponse joinResponse = userService.join(joinRequest);
+
+        LoginRequest request = new LoginRequest(username, password);
+
+        //when
+        LoginResponse response = userService.login(request);
+
+        //then
+        assertThat(response.getId()).isEqualTo(joinResponse.getUserId());
+        assertThat(response.getToken().length()).isGreaterThan(50);
     }
 }
