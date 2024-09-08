@@ -1,5 +1,6 @@
 package com.secondhandplatform.user.service;
 
+import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.common.exception.DuplicateException;
 import com.secondhandplatform.common.exception.MailSendException;
 import com.secondhandplatform.provider.CertificationCodeProvider;
@@ -8,6 +9,7 @@ import com.secondhandplatform.provider.TokenProvider;
 import com.secondhandplatform.user.domain.Certification;
 import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.domain.UserRepository;
+import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.response.Response;
 import jakarta.transaction.Transactional;
@@ -16,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.secondhandplatform.common.exception.BadRequestException.*;
 import static com.secondhandplatform.common.exception.DuplicateException.*;
+import static com.secondhandplatform.common.exception.MailSendException.*;
 
 @Slf4j
 @Service
@@ -68,7 +72,7 @@ public class UserService {
 
         if (!isSuccess) {
             log.error("이메일 전송중 오류 발생");
-            throw new MailSendException("이메일 전송중 오류 발생");
+            throw new MailSendException(MAIL_SEND_FAIL);
         }
 
         Certification certification = Certification.create(email, certificationCode);
@@ -80,9 +84,24 @@ public class UserService {
     }
 
     // 인증번호 검증
-//    public CertificationCheckResponseDto certificationCheck(CertificationCheckRequestDto request) {
-//
-//    }
+    public Response certificationCheck(CertificationCodeCheckRequest request) {
+        String targetCode = request.getCertificationCode();
+        String targetEmail = request.getEmail();
+
+        Certification findCertification = certificationRepository.findByEmail(targetEmail);
+        String findEmail = findCertification.getEmail();
+        String findCode = findCertification.getCertificationCode();
+
+        if (!(targetCode.equals(findCode) && targetEmail.equals(findEmail))) {
+            throw new BadRequestException(WRONG_CERTIFICATION_CODE);
+        }
+
+        certificationRepository.delete(findCertification);
+
+        return Response.builder()
+                .message(Response.CERTIFICATION_CHECK_OK)
+                .build();
+    }
 
     //회원가입
 //    public CreateUserResponseDto join(CreateUserRequestDto request) {
