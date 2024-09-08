@@ -232,4 +232,27 @@ class UserServiceTest {
         assertThat(response.getId()).isEqualTo(joinResponse.getUserId());
         assertThat(response.getToken().length()).isGreaterThan(50);
     }
+
+    @Test
+    @DisplayName("잘못된 비밀번호로 로그인에 실패한다.")
+    void loginFail() {
+        //given
+        String username = "userA";
+        String password = "1234";
+
+        JoinRequest joinRequest = JoinRequest.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        JoinResponse joinResponse = userService.join(joinRequest);
+
+        LoginRequest request = new LoginRequest(username, "wrongPassword");
+
+        //when //then
+        assertThatThrownBy(() -> userService.login(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(BadRequestException.WRONG_LOGIN_INFO);
+
+    }
 }
