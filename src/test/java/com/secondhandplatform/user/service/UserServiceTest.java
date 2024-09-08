@@ -206,7 +206,7 @@ class UserServiceTest {
         //then
         assertThat(response.getPassword()
                 .length()).isGreaterThan(30);
-        assertThat(response.getUserId()).isEqualTo(1L);
+        assertThat(response.getUsername()).isEqualTo("memberA");
     }
     
     @Test
