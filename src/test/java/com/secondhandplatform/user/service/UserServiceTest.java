@@ -4,12 +4,11 @@ import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.common.exception.DuplicateException;
 import com.secondhandplatform.provider.CertificationCodeProvider;
 import com.secondhandplatform.provider.EmailProvider;
-import com.secondhandplatform.user.domain.Certification;
-import com.secondhandplatform.user.domain.CertificationRepository;
-import com.secondhandplatform.user.domain.User;
-import com.secondhandplatform.user.domain.UserRepository;
+import com.secondhandplatform.user.domain.*;
 import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
+import com.secondhandplatform.user.dto.request.JoinRequest;
+import com.secondhandplatform.user.dto.response.JoinResponse;
 import com.secondhandplatform.user.dto.response.Response;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -179,5 +179,29 @@ class UserServiceTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(BadRequestException.WRONG_EMAIL);
 
+    }
+
+    @Test
+    @DisplayName("회원가입에 성공한다.")
+    void join() {
+        //given
+        LocalDate localDate = LocalDate.of(1998, 12, 12);
+
+        JoinRequest req = JoinRequest.builder()
+                .username("memberA")
+                .password("1234")
+                .phone("01012341234")
+                .email("test@example.com")
+                .userType(UserType.USER)
+                .signupType(SignupType.APP)
+                .name("nameEx")
+                .birthday(localDate)
+                .build();
+
+        //when
+        JoinResponse response = userService.join(req);
+
+        //then
+        assertThat(response.getUserId()).isEqualTo(1L);
     }
 }
