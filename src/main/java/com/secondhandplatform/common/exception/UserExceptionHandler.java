@@ -20,4 +20,11 @@ public class UserExceptionHandler {
         return ResponseEntity.status(500)
                 .body(errorResult);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<?> badRequestExceptionHandler(BadRequestException e) {
+        ErrorResult errorResult = new ErrorResult(e.getMessage());
+        return ResponseEntity.status(400)
+                .body(errorResult);
+    }
 }
