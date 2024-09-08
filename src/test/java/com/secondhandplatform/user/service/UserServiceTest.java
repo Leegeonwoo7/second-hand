@@ -31,7 +31,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 아이디로 회원가입을 시도한다.")
+    @DisplayName("존재하지 않는 아이디로 중복확인을 시도한다.")
     void checkLoginIdAvailability() {
         // given
         String username = "memberA";
@@ -44,7 +44,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("존재하는 아이디로 회원가입을 시도한다.")
+    @DisplayName("존재하는 아이디로 중복확인을 시도한다.")
     void checkLoginIdAvailability2() {
         // given
         String username = "memberA";
@@ -59,4 +59,36 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.checkLoginIdAvailability(username))
                 .isInstanceOf(DuplicateException.class);
     }
+
+    @Test
+    @DisplayName("존재하지 않는 이메일로 중복확인을 시도한다.")
+    void checkEmailAvailability() {
+        // given
+        String email = "test@example.com";
+
+        //when
+        Response response = userService.checkEmailAvailability(email);
+
+        //then
+        assertThat(response.getMessage()).isEqualTo(Response.EMAIL_OK);
+    }
+
+    @Test
+    @DisplayName("존재하는 이메일로 중복확인을 시도한다.")
+    void checkEmailAvailability2() {
+        // given
+        String email = "test@example.com";
+
+        User user = User.builder()
+                .username("uesrA")
+                .email(email)
+                .build();
+
+        userRepository.save(user);
+
+        //when //then
+        assertThatThrownBy(() -> userService.checkEmailAvailability(email))
+                .isInstanceOf(DuplicateException.class);
+    }
+
 }
