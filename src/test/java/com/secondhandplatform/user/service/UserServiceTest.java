@@ -3,9 +3,11 @@ package com.secondhandplatform.user.service;
 import com.secondhandplatform.common.exception.DuplicateException;
 import com.secondhandplatform.provider.CertificationCodeProvider;
 import com.secondhandplatform.provider.EmailProvider;
+import com.secondhandplatform.user.domain.Certification;
 import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
+import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.response.Response;
 import org.junit.jupiter.api.*;
@@ -17,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -106,4 +110,30 @@ class UserServiceTest {
 
   }
 
+  @Test
+  @DisplayName("이메일 검증에 성공한다")
+  void certificationCheck() {
+      //given
+      String email = "test@example.com";
+      String code = "1234";
+
+      Certification certification = Certification.builder()
+              .email(email)
+              .certificationNumber(code)
+              .build();
+
+      Certification savedCertification = certificationRepository.save(certification);
+
+      CertificationCodeCheckRequest request = new CertificationCodeCheckRequest(email, code);
+
+      //when
+      Response response = userService.certificationCheck(request);
+
+      //then
+      assertThat(response.getMessage()).isEqualTo(Response.CERTIFICATION_CHECK_OK);
+      
+      Optional<Certification> afterDeleteEntity = certificationRepository.findById(savedCertification.getId());
+      assertThat(afterDeleteEntity).isEmpty();
+  }
+  
 }
