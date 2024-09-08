@@ -41,9 +41,17 @@ public class UserService {
     }
 
     //이메일 중복여부 확인
-//    public EmailCheckResponseDto checkEmailAvailability(String email) {
-//
-//    }
+    public Response checkEmailAvailability(String email) {
+        boolean isExist = userRepository.existsByEmail(email);
+
+        if (isExist) {
+            throw new DuplicateException(EMAIL_DUPLICATE);
+        }
+
+        return Response.builder()
+                .message(Response.EMAIL_OK)
+                .build();
+    }
 
     // 이메일 인증번호를 전송함과 동시에 아이디 중복체크와 이메일 중복체크를 수행
 //    public CertificationCodeResponseDto sendCertificationCode(CertificationCodeRequestDto request) {
