@@ -1,5 +1,6 @@
 package com.secondhandplatform.user.service;
 
+import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.common.exception.DuplicateException;
 import com.secondhandplatform.provider.CertificationCodeProvider;
 import com.secondhandplatform.provider.EmailProvider;
@@ -131,9 +132,52 @@ class UserServiceTest {
 
       //then
       assertThat(response.getMessage()).isEqualTo(Response.CERTIFICATION_CHECK_OK);
-      
+
       Optional<Certification> afterDeleteEntity = certificationRepository.findById(savedCertification.getId());
       assertThat(afterDeleteEntity).isEmpty();
   }
-  
+
+  @Test
+  @DisplayName("잘못된 인증번호로 이메일 인증에 실패한다")
+  void certificationCheckFail() {
+      //given
+      String email = "test@example.com";
+      String code = "1234";
+
+      Certification certification = Certification.builder()
+              .email(email)
+              .certificationNumber(code)
+              .build();
+      Certification savedCertification = certificationRepository.save(certification);
+
+      CertificationCodeCheckRequest request = new CertificationCodeCheckRequest(email, "5432");
+
+      //when //then
+      assertThatThrownBy(() -> userService.certificationCheck(request))
+              .isInstanceOf(BadRequestException.class)
+              .hasMessage(BadRequestException.WRONG_CERTIFICATION_CODE);
+
+  }
+
+    @Test
+    @DisplayName("인증요청한 이메일이 일치하지 않아 인증에 실패한다")
+    void certificationCheckFail2() {
+        //given
+        String email = "test@example.com";
+        String code = "1234";
+
+        Certification certification = Certification.builder()
+                .email(email)
+                .certificationNumber(code)
+                .build();
+        Certification savedCertification = certificationRepository.save(certification);
+
+        CertificationCodeCheckRequest request = new CertificationCodeCheckRequest("wrongEmail@example.com", code);
+
+        //when //then
+        assertThatThrownBy(() -> userService.certificationCheck(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(BadRequestException.WRONG_EMAIL);
+
+    }
 }
