@@ -1,4 +1,4 @@
-package com.secondhandplatform.common;
+package com.secondhandplatform.common.filter;
 
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.provider.TokenProvider;
@@ -68,7 +68,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             authorities.add(new SimpleGrantedAuthority(role));
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getLoginId(), null, authorities);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
 
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

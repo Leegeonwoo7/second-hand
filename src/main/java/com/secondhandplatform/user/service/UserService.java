@@ -1,19 +1,18 @@
 package com.secondhandplatform.user.service;
 
-import com.secondhandplatform.dto.user.request.CertificationCheckRequestDto;
-import com.secondhandplatform.dto.user.request.CertificationCodeRequestDto;
-import com.secondhandplatform.dto.user.request.CreateUserRequestDto;
-import com.secondhandplatform.dto.user.request.LoginRequestDto;
-import com.secondhandplatform.dto.user.response.*;
+import com.secondhandplatform.common.exception.DuplicateException;
 import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.provider.TokenProvider;
 import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.domain.UserRepository;
+import com.secondhandplatform.user.dto.response.Response;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static com.secondhandplatform.common.exception.DuplicateException.*;
 
 @Slf4j
 @Service
@@ -29,34 +28,42 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     //아이디 중복체크
-    public UserResponseDto checkLoginIdAvailability(String loginId) {
+    public Response checkLoginIdAvailability(String username) {
+        boolean isExist = userRepository.existsByUsername(username);
 
+        if (isExist) {
+            throw new DuplicateException(USERNAME_DUPLICATE);
+        }
+
+        return Response.builder()
+                .message(Response.USERNAME_OK)
+                .build();
     }
 
-    // 이메일 중복여부 확인
-    public EmailCheckResponseDto checkEmailAvailability(String email) {
-
-    }
+    //이메일 중복여부 확인
+//    public EmailCheckResponseDto checkEmailAvailability(String email) {
+//
+//    }
 
     // 이메일 인증번호를 전송함과 동시에 아이디 중복체크와 이메일 중복체크를 수행
-    public CertificationCodeResponseDto sendCertificationCode(CertificationCodeRequestDto request) {
-
-    }
+//    public CertificationCodeResponseDto sendCertificationCode(CertificationCodeRequestDto request) {
+//
+//    }
 
     // 인증번호 검증
-    public CertificationCheckResponseDto certificationCheck(CertificationCheckRequestDto request) {
-
-    }
+//    public CertificationCheckResponseDto certificationCheck(CertificationCheckRequestDto request) {
+//
+//    }
 
     //회원가입
-    public CreateUserResponseDto join(CreateUserRequestDto request) {
-
-    }
+//    public CreateUserResponseDto join(CreateUserRequestDto request) {
+//
+//    }
 
     // 로그인
-    public LoginResponseDto login(LoginRequestDto request) {
-
-    }
+//    public LoginResponseDto login(LoginRequestDto request) {
+//
+//    }
 
 
 }

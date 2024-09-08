@@ -1,6 +1,6 @@
 package com.secondhandplatform.config;
 
-import com.secondhandplatform.common.AuthenticationFilter;
+import com.secondhandplatform.common.filter.AuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

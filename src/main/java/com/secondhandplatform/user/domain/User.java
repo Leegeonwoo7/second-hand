@@ -17,29 +17,36 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "login_id", unique = true, length = 15, nullable = false)
-    private String loginId;
+    //, nullable = false
+    @Column(name = "username", unique = true, length = 15)
+    private String username;
 
-    @Column(length = 255, nullable = false)
+    //, nullable = false
+    @Column(length = 255)
     private String password;
 
-    @Column(length = 50, unique = true, nullable = false)
+    //, nullable = false
+    @Column(length = 50, unique = true)
     private String email;
 
-    @Column(length = 15, unique = true, nullable = false)
+    //, nullable = false
+    @Column(length = 15, unique = true)
     private String phone;
 
-    @Column(nullable = false)
+    //nullable = false
+    @Column()
     private LocalDate birthday;
 
     @Column(name = "store_name", length = 15, unique = true)
     private String name;
 
-    @Column(name = "user_type", nullable = false)
+    //, nullable = false
+    @Column(name = "user_type")
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @Column(name = "signup_type", nullable = false)
+    //, nullable = false
+    @Column(name = "signup_type")
     @Enumerated(EnumType.STRING)
     private SignupType signupType;
 
@@ -48,8 +55,8 @@ public class User extends BaseEntity {
     //private List<Favorite> favorites;
 
     @Builder
-    private User(String loginId, String password, String email, String phone, LocalDate birthday, String name, UserType userType, SignupType signupType) {
-        this.loginId = loginId;
+    private User(String username, String password, String email, String phone, LocalDate birthday, String name, UserType userType, SignupType signupType) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.phone = phone;
@@ -67,7 +74,7 @@ public class User extends BaseEntity {
             return false;
         User user = (User) object;
         return Objects.equals(getId(), user.getId()) &&
-                Objects.equals(getLoginId(), user.getLoginId()) &&
+                Objects.equals(getUsername(), user.getUsername()) &&
                 Objects.equals(getPassword(), user.getPassword()) &&
                 Objects.equals(getEmail(), user.getEmail()) &&
                 Objects.equals(getPhone(), user.getPhone()) &&
@@ -78,6 +85,6 @@ public class User extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getLoginId(), getPassword(), getEmail(), getPhone(), getBirthday(), getName(), getUserType(), getSignupType());
+        return Objects.hash(getId(), getUsername(), getPassword(), getEmail(), getPhone(), getBirthday(), getName(), getUserType(), getSignupType());
     }
 }

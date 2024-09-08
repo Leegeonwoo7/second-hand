@@ -9,63 +9,63 @@
 
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
 <div class="container">
-    <div th:replace="~{fragment/navbar :: navbar}"></div>
+<!--    <div th:replace="~{fragment/navbar :: navbar}"></div>-->
 
-    <div class="container mt-5">
-        <h2 class="text-center">회원가입</h2>
-        <form th:action="@{/users/sig n-up}" method="post" th:object="${SignupReqeust}">
-            <div class="mb-3">
-                <label for="loginId" class="form-label">로그인 ID</label>
-                <input type="text" class="form-control" th:field="*{loginId}" th:errorclass="field-error" id="loginId" placeholder="로그인 ID를 입력하세요" required>
-                <button th:onclick="|window.location.href='@{/users/sign-up}'|">중복체크</button>
-                <div th:errors="*{loginId}"></div>
-            </div>
+<!--    <div class="container mt-5">-->
+<!--        <h2 class="text-center">회원가입</h2>-->
+<!--        <form th:action="@{/users/sig n-up}" method="post" th:object="${SignupReqeust}">-->
+<!--            <div class="mb-3">-->
+<!--                <label for="loginId" class="form-label">로그인 ID</label>-->
+<!--                <input type="text" class="form-control" th:field="*{uesrname}" th:errorclass="field-error" id="loginId" placeholder="로그인 ID를 입력하세요" required>-->
+<!--                <button th:onclick="|window.location.href='@{/users/sign-up}'|">중복체크</button>-->
+<!--                <div th:errors="*{uesrname}"></div>-->
+<!--            </div>-->
 
-            <div class="mb-3">
-                <label for="password" class="form-label">비밀번호</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
-            </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="password" class="form-label">비밀번호</label>-->
+<!--                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>-->
+<!--            </div>-->
 
-            <div class="mb-3">
-                <label for="email" class="form-label">이메일</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요" required>
-            </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="email" class="form-label">이메일</label>-->
+<!--                <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요" required>-->
+<!--            </div>-->
 
-            <div class="mb-3">
-                <label for="phone" class="form-label">전화번호</label>
-                <input type="text" class="form-control" id="phone" name="phone" placeholder="전화번호를 입력하세요" required>
-            </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="phone" class="form-label">전화번호</label>-->
+<!--                <input type="text" class="form-control" id="phone" name="phone" placeholder="전화번호를 입력하세요" required>-->
+<!--            </div>-->
 
-            <div class="mb-3">
-                <label for="birthday" class="form-label">생년월일</label>
-                <input type="date" class="form-control" id="birthday" name="birthday" required>
-            </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="birthday" class="form-label">생년월일</label>-->
+<!--                <input type="date" class="form-control" id="birthday" name="birthday" required>-->
+<!--            </div>-->
 
-            <div class="mb-3">
-                <label for="name" class="form-label">이름</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="이름을 입력하세요" required>
-            </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="name" class="form-label">이름</label>-->
+<!--                <input type="text" class="form-control" id="name" name="name" placeholder="이름을 입력하세요" required>-->
+<!--            </div>-->
 
-            <div class="mb-3">
-                <label for="userType" class="form-label">사용자 유형</label>
-                <select class="form-select" id="userType" name="userType">
-                    <option value="USER">일반 사용자</option>
-                    <option value="ADMIN">관리자</option>
-                </select>
-            </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="userType" class="form-label">사용자 유형</label>-->
+<!--                <select class="form-select" id="userType" name="userType">-->
+<!--                    <option value="USER">일반 사용자</option>-->
+<!--                    <option value="ADMIN">관리자</option>-->
+<!--                </select>-->
+<!--            </div>-->
 
-            <div class="mb-3">
-                <label for="signupType" class="form-label">회원가입 유형</label>
-                <select class="form-select" id="signupType" name="signupType">
-                    <option value="APP">본인인증</option>
-                    <option value="KAKAO">카카오</option>
-                    <option value="NAVER">네이버</option>
-                </select>
-            </div>
+<!--            <div class="mb-3">-->
+<!--                <label for="signupType" class="form-label">회원가입 유형</label>-->
+<!--                <select class="form-select" id="signupType" name="signupType">-->
+<!--                    <option value="APP">본인인증</option>-->
+<!--                    <option value="KAKAO">카카오</option>-->
+<!--                    <option value="NAVER">네이버</option>-->
+<!--                </select>-->
+<!--            </div>-->
 
-            <button type="submit" class="btn btn-primary w-100">회원가입</button>
-        </form>
-    </div>
+<!--            <button type="submit" class="btn btn-primary w-100">회원가입</button>-->
+<!--        </form>-->
+<!--    </div>-->
 
 </div>
 </body>
