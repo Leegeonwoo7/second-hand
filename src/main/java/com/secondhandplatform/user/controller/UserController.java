@@ -1,9 +1,9 @@
 package com.secondhandplatform.user.controller;
 
-import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
-import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
-import com.secondhandplatform.user.dto.request.UsernameCheckRequest;
+import com.secondhandplatform.user.dto.request.*;
+import com.secondhandplatform.user.dto.response.JoinResponse;
+import com.secondhandplatform.user.dto.response.LoginResponse;
 import com.secondhandplatform.user.dto.response.Response;
 import com.secondhandplatform.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,27 +29,42 @@ public class UserController {
                 .body(response);
     }
 
-//    @PostMapping("/email-check")
-//    public ResponseEntity<?> checkEmail(@RequestBody EmailCheckRequestDto request){
-//
-//    }
-//
+    @PostMapping("/email-check")
+    public ResponseEntity<?> checkEmail(@RequestBody CheckEmailRequest request){
+        String email = request.getEmail();
+
+        Response response = userService.checkEmailAvailability(email);
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
     @GetMapping("/email-certification")
     public ResponseEntity<?> sendCertificationEmail(@RequestBody CertificationCodeRequest request) {
         Response response = userService.sendCertificationCode(request);
 
         return ResponseEntity.ok(response);
     }
-//
-//    @PostMapping("/email-certification")
-//
-//    }
-//
-//    @PostMapping("/join")
-//
-//    }
-//
-//    @PostMapping("/login")
-//
-//    }
+
+    @PostMapping("/email-certification")
+    public ResponseEntity<?> checkCertificationCode(@RequestBody CertificationCodeCheckRequest request) {
+        Response response = userService.certificationCheck(request);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@RequestBody JoinRequest request) {
+        JoinResponse response = userService.join(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        LoginResponse response = userService.login(request);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

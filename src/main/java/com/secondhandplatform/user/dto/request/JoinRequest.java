@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 
@@ -29,13 +30,16 @@ public class JoinRequest {
     }
 
     public User toEntity() {
+        String toUseName = !StringUtils.hasText(this.name) ? username : this.name;
+        System.out.println("toUseName = " + toUseName);
+
         return User.builder()
                 .username(this.username)
                 .password(this.password)
                 .email(this.email)
                 .phone(this.phone)
                 .birthday(this.birthday)
-                .name(this.name)
+                .name(toUseName)
                 .userType(this.userType)
                 .signupType(this.signupType)
                 .build();
