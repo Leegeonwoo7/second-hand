@@ -1,17 +1,22 @@
 package com.secondhandplatform.user.service;
 
 import com.secondhandplatform.common.exception.DuplicateException;
+import com.secondhandplatform.provider.CertificationCodeProvider;
+import com.secondhandplatform.provider.EmailProvider;
+import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
+import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
@@ -25,9 +30,13 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    CertificationRepository certificationRepository;
+
     @AfterEach
     void tearDown() {
         userRepository.deleteAllInBatch();
+        certificationRepository.deleteAllInBatch();
     }
 
     @Test
@@ -90,5 +99,11 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.checkEmailAvailability(email))
                 .isInstanceOf(DuplicateException.class);
     }
+    
+  @Test
+  @DisplayName("인증번호 이메일 전송에 성공한다.")
+  void sendCertificationCodeSuccess() {
+
+  }
 
 }
