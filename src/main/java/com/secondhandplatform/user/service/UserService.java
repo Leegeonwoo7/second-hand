@@ -13,7 +13,9 @@ import com.secondhandplatform.user.domain.UserRepository;
 import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.request.JoinRequest;
+import com.secondhandplatform.user.dto.request.LoginRequest;
 import com.secondhandplatform.user.dto.response.JoinResponse;
+import com.secondhandplatform.user.dto.response.LoginResponse;
 import com.secondhandplatform.user.dto.response.Response;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -129,8 +131,30 @@ public class UserService {
     }
 
     // 로그인
-    public LoginResponseDto login(LoginRequestDto request) {
+    public LoginResponse login(LoginRequest request) {
+        String username = request.getUsername();
+        String password = request.getPassword();
 
+        User findUser = userRepository.findByUsername(username);
+        if (findUser == null) {
+            throw new BadRequestException(NOT_EXIST_USER);
+        }
+
+        boolean isMatches = bCryptPasswordEncoder.matches(password, findUser.getPassword());
+        System.out.println("password = " + password);
+        System.out.println("findUser.getPassword() = " + findUser.getPassword());
+        if (!isMatches) {
+            throw new BadRequestException(WRONG_LOGIN_INFO);
+        }
+
+        String token = tokenProvider.create(findUser.getId());
+        log.info("create token: {}", token);
+
+        return LoginResponse.builder()
+                .id(findUser.getId())
+                .token(token)
+                .name(findUser.getName())
+                .build();
     }
 
 
