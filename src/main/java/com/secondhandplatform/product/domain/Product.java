@@ -21,28 +21,35 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "product_name", length = 50, nullable = false)
+    //, nullable = false
+    @Column(name = "product_name", length = 50)
     private String name;
 
+    //nullable = false
     @Lob
-    @Column(nullable = false)
+    @Column()
     private String description;
 
-    @Column(nullable = false)
+    //nullable = false
+    @Column()
     private int price;
 
-    @Column(nullable = false)
+    //nullable = false
+    @Column()
     private int quantity;
 
-    @Column(nullable = false)
+    //nullable = false
+    @Column()
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @Column(name = "product_status", nullable = false)
+    //, nullable = false
+    @Column(name = "product_status")
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
-    @Column(name = "selling_status", nullable = false)
+    //, nullable = false
+    @Column(name = "selling_status")
     @Enumerated(EnumType.STRING)
     private SellingStatus sellingStatus;
 
