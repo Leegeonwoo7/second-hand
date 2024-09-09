@@ -3,6 +3,7 @@ package com.secondhandplatform.product.service;
 import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.product.domain.Product;
 import com.secondhandplatform.product.domain.ProductRepository;
+import com.secondhandplatform.product.dto.request.EditProductRequest;
 import com.secondhandplatform.product.dto.request.RegisterProductRequest;
 import com.secondhandplatform.product.dto.response.ProductResponse;
 import com.secondhandplatform.user.domain.User;
@@ -34,5 +35,15 @@ public class ProductService {
 
         Product savedProduct = productRepository.save(product);
         return ProductResponse.of(savedProduct);
+    }
+
+    // 상품 수정
+    public ProductResponse editProduct(EditProductRequest request) {
+        Long productId = request.getProductId();
+        Product findProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new BadRequestException(NOT_EXIST_PRODUCT));
+
+        Product editedProduct = findProduct.updateProduct(request);
+        return ProductResponse.of(editedProduct);
     }
 }
