@@ -4,8 +4,7 @@ import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.user.domain.Certification;
 import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
-import com.secondhandplatform.user.dto.response.Response;
-import org.assertj.core.api.Assertions;
+import com.secondhandplatform.user.dto.response.UserResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,10 +48,10 @@ public class EmailSendTest {
             when(emailProvider.sendMail(email, certificationCode)).thenReturn(true);
 
             //when
-            Response response = userService.sendCertificationCode(request);
+            UserResponse response = userService.sendCertificationCode(request);
 
             //then
-            assertThat(response.getMessage()).isEqualTo(Response.EMAIL_SEND_OK);
+            assertThat(response.getMessage()).isEqualTo(UserResponse.EMAIL_SEND_OK);
         }
     }
 }

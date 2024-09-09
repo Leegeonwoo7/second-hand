@@ -2,30 +2,20 @@ package com.secondhandplatform.user.service;
 
 import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.common.exception.DuplicateException;
-import com.secondhandplatform.provider.CertificationCodeProvider;
-import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.user.domain.*;
 import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
-import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.request.JoinRequest;
 import com.secondhandplatform.user.dto.request.LoginRequest;
 import com.secondhandplatform.user.dto.response.JoinResponse;
 import com.secondhandplatform.user.dto.response.LoginResponse;
-import com.secondhandplatform.user.dto.response.Response;
+import com.secondhandplatform.user.dto.response.UserResponse;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -53,10 +43,10 @@ class UserServiceTest {
         String username = "memberA";
 
         //when
-        Response response = userService.checkLoginIdAvailability(username);
+        UserResponse response = userService.checkLoginIdAvailability(username);
 
         //then
-        assertThat(response.getMessage()).isEqualTo(Response.USERNAME_OK);
+        assertThat(response.getMessage()).isEqualTo(UserResponse.USERNAME_OK);
     }
 
     @Test
@@ -83,10 +73,10 @@ class UserServiceTest {
         String email = "test@example.com";
 
         //when
-        Response response = userService.checkEmailAvailability(email);
+        UserResponse response = userService.checkEmailAvailability(email);
 
         //then
-        assertThat(response.getMessage()).isEqualTo(Response.EMAIL_OK);
+        assertThat(response.getMessage()).isEqualTo(UserResponse.EMAIL_OK);
     }
 
     @Test
@@ -130,10 +120,10 @@ class UserServiceTest {
       CertificationCodeCheckRequest request = new CertificationCodeCheckRequest(email, code);
 
       //when
-      Response response = userService.certificationCheck(request);
+      UserResponse response = userService.certificationCheck(request);
 
       //then
-      assertThat(response.getMessage()).isEqualTo(Response.CERTIFICATION_CHECK_OK);
+      assertThat(response.getMessage()).isEqualTo(UserResponse.CERTIFICATION_CHECK_OK);
 
       Optional<Certification> afterDeleteEntity = certificationRepository.findById(savedCertification.getId());
       assertThat(afterDeleteEntity).isEmpty();

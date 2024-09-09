@@ -16,7 +16,7 @@ import com.secondhandplatform.user.dto.request.JoinRequest;
 import com.secondhandplatform.user.dto.request.LoginRequest;
 import com.secondhandplatform.user.dto.response.JoinResponse;
 import com.secondhandplatform.user.dto.response.LoginResponse;
-import com.secondhandplatform.user.dto.response.Response;
+import com.secondhandplatform.user.dto.response.UserResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,34 +41,34 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     //아이디 중복체크
-    public Response checkLoginIdAvailability(String username) {
+    public UserResponse checkLoginIdAvailability(String username) {
         boolean isExist = userRepository.existsByUsername(username);
 
         if (isExist) {
             throw new DuplicateException(USERNAME_DUPLICATE);
         }
 
-        return Response.builder()
-                .message(Response.USERNAME_OK)
+        return UserResponse.builder()
+                .message(UserResponse.USERNAME_OK)
                 .build();
     }
 
     //이메일 중복여부 확인
-    public Response checkEmailAvailability(String email) {
+    public UserResponse checkEmailAvailability(String email) {
         boolean isExist = userRepository.existsByEmail(email);
 
         if (isExist) {
             throw new DuplicateException(EMAIL_DUPLICATE);
         }
 
-        return Response.builder()
-                .message(Response.EMAIL_OK)
+        return UserResponse.builder()
+                .message(UserResponse.EMAIL_OK)
                 .build();
     }
 
     // 이메일 인증번호를 전송함과 동시에 아이디 중복체크와 이메일 중복체크를 수행
     // 그럼 쿼리를 또 조회해야하는데... 그냥 stateless하게 클라이언트에 이메일 중복체크, 아이디 중복체크 여부를 준다면?
-    public Response sendCertificationCode(CertificationCodeRequest request) {
+    public UserResponse sendCertificationCode(CertificationCodeRequest request) {
         String username = request.getUsername();
         String email = request.getEmail();
 
@@ -83,13 +83,13 @@ public class UserService {
         Certification certification = Certification.create(email, certificationCode);
         certificationRepository.save(certification);
 
-        return Response.builder()
-                .message(Response.EMAIL_SEND_OK)
+        return UserResponse.builder()
+                .message(UserResponse.EMAIL_SEND_OK)
                 .build();
     }
 
     // 인증번호 검증
-    public Response certificationCheck(CertificationCodeCheckRequest request) {
+    public UserResponse certificationCheck(CertificationCodeCheckRequest request) {
         String targetCode = request.getCertificationCode();
         String targetEmail = request.getEmail();
 
@@ -107,8 +107,8 @@ public class UserService {
 
         certificationRepository.delete(findCertification);
 
-        return Response.builder()
-                .message(Response.CERTIFICATION_CHECK_OK)
+        return UserResponse.builder()
+                .message(UserResponse.CERTIFICATION_CHECK_OK)
                 .build();
     }
 
