@@ -1,5 +1,6 @@
 package com.secondhandplatform.product.domain;
 
+import com.secondhandplatform.product.dto.request.EditProductRequest;
 import com.secondhandplatform.user.domain.BaseEntity;
 import com.secondhandplatform.user.domain.User;
 import jakarta.persistence.*;
@@ -68,5 +69,17 @@ public class Product extends BaseEntity {
     //TODO 양방향 매핑시 메서드 수정필요
     public void registerBy(User user) {
         this.user = user;
+    }
+
+    public Product updateProduct(EditProductRequest request) {
+        this.name = request.getName();
+        this.description = request.getDescription();
+        this.price = request.getPrice();
+        this.quantity = request.getQuantity();
+        this.category = request.getCategory();
+        this.productStatus = request.getProductStatus();
+        this.sellingStatus = request.getSellingStatus();
+
+        return this;
     }
 }
