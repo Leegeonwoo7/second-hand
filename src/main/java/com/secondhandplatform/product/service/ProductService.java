@@ -5,6 +5,7 @@ import com.secondhandplatform.product.domain.Product;
 import com.secondhandplatform.product.domain.ProductRepository;
 import com.secondhandplatform.product.dto.request.EditProductRequest;
 import com.secondhandplatform.product.dto.request.RegisterProductRequest;
+import com.secondhandplatform.product.dto.request.RemoveProductRequest;
 import com.secondhandplatform.product.dto.response.ProductResponse;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
@@ -46,4 +47,10 @@ public class ProductService {
         Product editedProduct = findProduct.updateProduct(request);
         return ProductResponse.of(editedProduct);
     }
+
+    public void removeProduct(RemoveProductRequest request) {
+
+    }
+
+
 }
