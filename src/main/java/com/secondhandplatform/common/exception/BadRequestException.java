@@ -2,6 +2,7 @@ package com.secondhandplatform.common.exception;
 
 public class BadRequestException extends RuntimeException{
 
+    public static final String DEFAULT_MESSAGE = "잘못된 요청입니다.";
 
     public static final String WRONG_CERTIFICATION_CODE = "일치하지 않는 인증번호";
     public static final String WRONG_EMAIL = "이메일이 일치하지 않습니다.";

@@ -11,6 +11,7 @@ import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class ProductService {
     }
 
     // 상품 수정
+    @Transactional
     public ProductResponse editProduct(EditProductRequest request) {
         Long productId = request.getProductId();
         Product findProduct = productRepository.findById(productId)
@@ -48,10 +50,29 @@ public class ProductService {
         return ProductResponse.of(editedProduct);
     }
 
+    public ProductResponse findProduct(Long userId, Long productId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        User user = optionalUser.orElseThrow(()
+                -> new BadRequestException(NOT_EXIST_USER));
+
+        Product product = optionalProduct.orElseThrow(()
+                -> new BadRequestException(NOT_EXIST_PRODUCT));
+
+        if (!(product.getUser().equals(user))){
+            throw new BadRequestException(DEFAULT_MESSAGE);
+        }
+
+        return ProductResponse.of(product);
+    }
+
     public void removeProduct(RemoveProductRequest request) {
         Long productId = request.getProductId();
         Long userId = request.getUserId();
     }
+
+
 
 
 }
