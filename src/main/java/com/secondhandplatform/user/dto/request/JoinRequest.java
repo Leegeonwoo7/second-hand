@@ -32,7 +32,7 @@ public class JoinRequest {
     public User toEntity() {
         String toUseName = !StringUtils.hasText(this.name) ? username : this.name;
         System.out.println("toUseName = " + toUseName);
-
+        
         return User.builder()
                 .username(this.username)
                 .password(this.password)
@@ -40,8 +40,8 @@ public class JoinRequest {
                 .phone(this.phone)
                 .birthday(this.birthday)
                 .name(toUseName)
-                .userType(this.userType)
-                .signupType(this.signupType)
+                .userType(UserType.USER)
+                .signupType(SignupType.APP)
                 .build();
     }
 }

@@ -49,7 +49,8 @@ public class ProductService {
     }
 
     public void removeProduct(RemoveProductRequest request) {
-
+        Long productId = request.getProductId();
+        Long userId = request.getUserId();
     }
 
 
