@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +37,13 @@ public class ProductController {
     @GetMapping("/{userId}/{productId}")
     public ResponseEntity<?> findProduct(@PathVariable Long userId, @PathVariable Long productId) {
         ProductResponse response = productService.findProduct(userId, productId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> findProductList(@PathVariable Long userId) {
+        List<ProductResponse> response = productService.findProductList(userId);
 
         return ResponseEntity.ok(response);
     }

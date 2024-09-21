@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.secondhandplatform.common.exception.BadRequestException.*;
 
@@ -50,6 +52,7 @@ public class ProductService {
         return ProductResponse.of(editedProduct);
     }
 
+    // 상품 단건조회
     public ProductResponse findProduct(Long userId, Long productId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<Product> optionalProduct = productRepository.findById(productId);
@@ -67,9 +70,24 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
+    // 회원의 모든상품조회
+    public List<ProductResponse> findProductList(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BadRequestException(NOT_EXIST_USER));
+
+        List<Product> productList = productRepository.findByUser(user);
+
+        return productList.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    // 상품삭제
     public void removeProduct(RemoveProductRequest request) {
         Long productId = request.getProductId();
         Long userId = request.getUserId();
+
+
     }
 
 
