@@ -2,6 +2,7 @@ package com.secondhandplatform.product.controller;
 
 import com.secondhandplatform.product.dto.request.EditProductRequest;
 import com.secondhandplatform.product.dto.request.RegisterProductRequest;
+import com.secondhandplatform.product.dto.request.RemoveProductRequest;
 import com.secondhandplatform.product.dto.response.ProductResponse;
 import com.secondhandplatform.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,10 @@ public class ProductController {
         List<ProductResponse> response = productService.findProductList(userId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping
+    public void deleteProduct(@RequestBody RemoveProductRequest request) {
+        productService.removeProduct(request);
     }
 }

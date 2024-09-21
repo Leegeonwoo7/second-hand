@@ -87,7 +87,10 @@ public class ProductService {
         Long productId = request.getProductId();
         Long userId = request.getUserId();
 
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new BadRequestException(NOT_EXIST_PRODUCT));
 
+        productRepository.delete(product);
     }
 
 
