@@ -11,6 +11,7 @@ import com.secondhandplatform.product.domain.ProductRepository;
 import com.secondhandplatform.product.domain.SellingStatus;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,13 @@ class OrderServiceTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @AfterEach
+    void tearDown() {
+        orderRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+    }
 
     @Test
     @DisplayName("주문을 생성한다.")
