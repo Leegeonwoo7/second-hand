@@ -2,6 +2,7 @@ package com.secondhandplatform.product.domain;
 
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,12 @@ class ProductRepositoryTest {
 
     @Autowired
     ProductRepository productRepository;
+
+    @AfterEach
+    void tearDown() {
+        productRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+    }
 
     @Test
     @DisplayName("여러 상품을 조회한다.")
