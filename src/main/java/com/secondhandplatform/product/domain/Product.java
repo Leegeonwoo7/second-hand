@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 
 @Entity
 @Getter
@@ -81,5 +83,26 @@ public class Product extends BaseEntity {
         this.sellingStatus = request.getSellingStatus();
 
         return this;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null || getClass() != object.getClass())
+            return false;
+        Product product = (Product) object;
+        return getPrice() == product.getPrice() && Objects.equals(getId(), product.getId()) &&
+                Objects.equals(getUser(), product.getUser()) &&
+                Objects.equals(getName(), product.getName()) &&
+                Objects.equals(getDescription(), product.getDescription()) &&
+                getCategory() == product.getCategory() &&
+                getProductStatus() == product.getProductStatus() &&
+                getSellingStatus() == product.getSellingStatus();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUser(), getName(), getDescription(), getPrice(), getCategory(), getProductStatus(), getSellingStatus());
     }
 }
