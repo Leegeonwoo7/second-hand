@@ -73,6 +73,10 @@ public class Product extends BaseEntity {
         this.user = user;
     }
 
+    public void changeSellingStatus() {
+        this.sellingStatus = SellingStatus.RESERVED;
+    }
+
     public Product updateProduct(EditProductRequest request) {
         this.name = request.getName();
         this.description = request.getDescription();
