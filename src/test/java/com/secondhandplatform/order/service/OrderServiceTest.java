@@ -8,6 +8,7 @@ import com.secondhandplatform.order.dto.request.OrderRequest;
 import com.secondhandplatform.order.dto.response.OrderResponse;
 import com.secondhandplatform.product.domain.Product;
 import com.secondhandplatform.product.domain.ProductRepository;
+import com.secondhandplatform.product.domain.SellingStatus;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -88,6 +89,7 @@ class OrderServiceTest {
     @Test
     @DisplayName("상품주문시 구매자를 조회하지 못하면 예외가 발생한다.")
     void createOrderFail() {
+        //given
         Long userId = 111L;
         User seller = createUser("seller");
 
@@ -103,6 +105,29 @@ class OrderServiceTest {
         assertThatThrownBy(() -> orderService.createOrder(request))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(BadRequestException.NOT_EXIST_USER);
+    }
+    
+    @Test
+    @DisplayName("주문이 완료되면 상품은 \"예약중\"으로 변경된다.")
+    void createOrderState() {
+        //given
+        User buyer = createUser("buyer");
+        User seller = createUser("seller");
+
+        Product product = registerProduct(seller, "상품A", 10000);
+
+        OrderRequest request = OrderRequest.builder()
+                .buyerId(buyer.getId())
+                .productId(product.getId())
+                .quantity(1)
+                .build();
+
+        //when
+        OrderResponse response = orderService.createOrder(request);
+
+        //then
+        Product savedOrder = response.getProduct();
+        assertThat(savedOrder.getSellingStatus()).isEqualTo(SellingStatus.RESERVED);
     }
 
     private Product registerProduct(User seller, String name, int price) {
