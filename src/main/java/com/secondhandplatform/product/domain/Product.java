@@ -36,8 +36,8 @@ public class Product extends BaseEntity {
     private int price;
 
     //nullable = false
-    @Column()
-    private int quantity;
+//    @Column()
+//    private int quantity;
 
     //nullable = false
     @Column()
@@ -59,7 +59,7 @@ public class Product extends BaseEntity {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.quantity = quantity;
+//        this.quantity = quantity;
         this.category = category;
         this.productStatus = productStatus;
         this.sellingStatus = sellingStatus;
@@ -75,7 +75,7 @@ public class Product extends BaseEntity {
         this.name = request.getName();
         this.description = request.getDescription();
         this.price = request.getPrice();
-        this.quantity = request.getQuantity();
+//        this.quantity = request.getQuantity();
         this.category = request.getCategory();
         this.productStatus = request.getProductStatus();
         this.sellingStatus = request.getSellingStatus();

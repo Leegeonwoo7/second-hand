@@ -29,7 +29,6 @@ public class ProductResponse {
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
-                .quantity(product.getQuantity())
                 .category(product.getCategory())
                 .productStatus(product.getProductStatus())
                 .sellingStatus(product.getSellingStatus())
