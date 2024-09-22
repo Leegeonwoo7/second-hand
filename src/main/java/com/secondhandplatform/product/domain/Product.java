@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor
+@ToString
 public class Product extends BaseEntity {
 
     @Column(name = "product_id")
@@ -101,12 +103,11 @@ public class Product extends BaseEntity {
                 Objects.equals(getName(), product.getName()) &&
                 Objects.equals(getDescription(), product.getDescription()) &&
                 getCategory() == product.getCategory() &&
-                getProductStatus() == product.getProductStatus() &&
-                getSellingStatus() == product.getSellingStatus();
+                getProductStatus() == product.getProductStatus();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUser(), getName(), getDescription(), getPrice(), getCategory(), getProductStatus(), getSellingStatus());
+        return Objects.hash(getId(), getUser(), getName(), getDescription(), getPrice(), getCategory(), getProductStatus());
     }
 }
