@@ -1,5 +1,9 @@
 package com.secondhandplatform.order.service;
 
+import com.secondhandplatform.common.exception.BadRequestException;
+import com.secondhandplatform.order.domain.Order;
+import com.secondhandplatform.order.domain.OrderRepository;
+import com.secondhandplatform.order.domain.OrderStatus;
 import com.secondhandplatform.order.dto.request.OrderRequest;
 import com.secondhandplatform.order.dto.response.OrderResponse;
 import com.secondhandplatform.product.domain.Product;
@@ -21,6 +25,9 @@ class OrderServiceTest {
     OrderService orderService;
 
     @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
     ProductRepository productRepository;
 
     @Autowired
@@ -30,27 +37,14 @@ class OrderServiceTest {
     @DisplayName("주문을 생성한다.")
     void createOrder() {
         //given
-        User buyer = User.builder()
-                .username("buyer")
-                .build();
-        User seller = User.builder()
-                .username("seller")
-                .build();
+        User buyer = createUser("buyer");
+        User seller = createUser("seller");
 
-        User savedBuyer = userRepository.save(buyer);
-        userRepository.save(seller);
-
-        Product product = Product.builder()
-                .name("상품A")
-                .price(10000)
-                .build();
-        product.registerBy(seller);
-
-        Product savedProduct = productRepository.save(product);
+        Product product = registerProduct(seller, "상품A", 10000);
 
         OrderRequest request = OrderRequest.builder()
-                .buyerId(savedBuyer.getId())
-                .productId(savedProduct.getId())
+                .buyerId(buyer.getId())
+                .productId(product.getId())
                 .quantity(1)
                 .build();
 
@@ -61,5 +55,70 @@ class OrderServiceTest {
         assertThat(response.getBuyer()).isEqualTo(buyer);
         assertThat(response.getSeller()).isEqualTo(seller);
         assertThat(response.getProduct()).isEqualTo(product);
+    }
+
+    @Test
+    @DisplayName("등록된 주문을 조회한다.")
+    void findOrder() {
+        //given
+        User buyer = createUser("buyer");
+        User seller = createUser("seller");
+
+        Product product = registerProduct(seller, "상품A", 10000);
+
+        OrderRequest request = OrderRequest.builder()
+                .buyerId(buyer.getId())
+                .productId(product.getId())
+                .quantity(2)
+                .build();
+        OrderResponse response = orderService.createOrder(request);
+
+        //when
+        Order order = orderRepository.findById(response.getId())
+                .orElseThrow(() -> new RuntimeException());
+
+        //then
+        assertThat(order.getTotalPrice()).isEqualTo(20000);
+        assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.INIT);
+        assertThat(order.getBuyer()).isEqualTo(buyer);
+        assertThat(order.getSeller()).isEqualTo(seller);
+        assertThat(order.getProduct()).isEqualTo(product);
+    }
+
+    @Test
+    @DisplayName("상품주문시 구매자를 조회하지 못하면 예외가 발생한다.")
+    void createOrderFail() {
+        Long userId = 111L;
+        User seller = createUser("seller");
+
+        Product product = registerProduct(seller, "상품A", 10000);
+
+        OrderRequest request = OrderRequest.builder()
+                .buyerId(userId)
+                .productId(product.getId())
+                .quantity(1)
+                .build();
+
+        //when //then
+        assertThatThrownBy(() -> orderService.createOrder(request))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(BadRequestException.NOT_EXIST_USER);
+    }
+
+    private Product registerProduct(User seller, String name, int price) {
+        Product product = Product.builder()
+                .name(name)
+                .price(price)
+                .build();
+        product.registerBy(seller);
+        return productRepository.save(product);
+    }
+
+    private User createUser(String username) {
+        User user = User.builder()
+                .username(username)
+                .build();
+
+        return userRepository.save(user);
     }
 }
