@@ -1,5 +1,6 @@
 package com.secondhandplatform.order.domain;
 
+import com.secondhandplatform.payment.domain.PaymentType;
 import com.secondhandplatform.user.domain.BaseEntity;
 import com.secondhandplatform.delivery.domain.Delivery;
 import com.secondhandplatform.payment.domain.Payment;
@@ -25,7 +26,7 @@ public class Order extends BaseEntity {
     private OrderStatus orderStatus;
 
     @Column(name = "order_price", nullable = false)
-    private int price;
+    private int totalPrice;
 
     @Column(name = "order_quantity", nullable = false)
     private int quantity;
@@ -41,8 +42,12 @@ public class Order extends BaseEntity {
 
     //TODO 양방향 연관관계 고려
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "buyer_id")
+    private User buyer;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
 
     //TODO 양방향 연관관계 고려
     @OneToOne
@@ -50,13 +55,29 @@ public class Order extends BaseEntity {
     private Product product;
 
     @Builder
-    private Order(OrderStatus orderStatus, int price, int quantity, Payment payment, Delivery delivery, User user, Product product) {
+    private Order(OrderStatus orderStatus, int totalPrice, int quantity, Payment payment, Delivery delivery, User buyer, User seller, Product product) {
         this.orderStatus = orderStatus;
-        this.price = price;
+        this.totalPrice = totalPrice;
         this.quantity = quantity;
         this.payment = payment;
         this.delivery = delivery;
-        this.user = user;
+        this.buyer = buyer;
+        this.seller = seller;
         this.product = product;
+    }
+
+    public static Order createOrder(User buyer, User seller, Product product, int quantity, Payment payment, Delivery delivery) {
+        int totalPrice = product.getPrice() * quantity;
+
+        return Order.builder()
+                .buyer(buyer)
+                .seller(seller)
+                .product(product)
+                .orderStatus(OrderStatus.INIT)
+                .payment(payment)
+                .quantity(quantity)
+                .delivery(delivery)
+                .totalPrice(totalPrice)
+                .build();
     }
 }
