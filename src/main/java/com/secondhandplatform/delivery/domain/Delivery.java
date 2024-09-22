@@ -21,16 +21,16 @@ public class Delivery extends BaseEntity {
 
     @Column(name = "delivery_status")
     @Enumerated(EnumType.STRING)
-    private DeliverStatus deliverStatus;
+    private DeliveryStatus deliveryStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    private Delivery(Address address, DeliverStatus deliverStatus, User user) {
+    private Delivery(Address address, DeliveryStatus deliverStatus, User user) {
         this.address = address;
-        this.deliverStatus = deliverStatus;
+        this.deliveryStatus = deliverStatus;
         this.user = user;
     }
 }
