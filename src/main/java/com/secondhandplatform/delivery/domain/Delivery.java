@@ -28,9 +28,9 @@ public class Delivery extends BaseEntity {
     private User user;
 
     @Builder
-    private Delivery(Address address, DeliveryStatus deliverStatus, User user) {
+    private Delivery(Address address, DeliveryStatus deliveryStatus, User user) {
         this.address = address;
-        this.deliveryStatus = deliverStatus;
+        this.deliveryStatus = deliveryStatus;
         this.user = user;
     }
 }
