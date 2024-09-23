@@ -1,6 +1,8 @@
 package com.secondhandplatform.order.service;
 
 import com.secondhandplatform.common.exception.BadRequestException;
+import com.secondhandplatform.delivery.domain.Address;
+import com.secondhandplatform.delivery.domain.DeliveryRepository;
 import com.secondhandplatform.order.domain.Order;
 import com.secondhandplatform.order.domain.OrderRepository;
 import com.secondhandplatform.order.domain.OrderStatus;
@@ -35,9 +37,13 @@ class OrderServiceTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    DeliveryRepository deliveryRepository;
+
     @AfterEach
     void tearDown() {
         orderRepository.deleteAllInBatch();
+        deliveryRepository.deleteAllInBatch();
         productRepository.deleteAllInBatch();
         userRepository.deleteAllInBatch();
     }
@@ -137,6 +143,57 @@ class OrderServiceTest {
         Product savedOrder = response.getProduct();
         assertThat(savedOrder.getSellingStatus()).isEqualTo(SellingStatus.RESERVED);
     }
+    
+    @Test
+    @DisplayName("주문생성시 배달지 정보가 직접입력되지 않을경우 회원의 기존 주소로 배송지를 등록한다.")
+    void createOrderDelivery() {
+        //given
+        Address address = new Address("서울시", "강남구 역삼로 131-2", "102동 4층");
+        User buyer = createUserWithAddress("buyer", address);
+        User seller = createUser("seller");
+
+
+        Product product = registerProduct(seller, "상품A", 10000);
+
+        OrderRequest request = OrderRequest.builder()
+                .buyerId(buyer.getId())
+                .productId(product.getId())
+                .quantity(1)
+                .build();
+
+        //when
+        OrderResponse response = orderService.createOrder(request);
+
+        //then
+        assertThat(response.getDelivery()
+                .getAddress()).isEqualTo(address);
+    }
+
+    @Test
+    @DisplayName("주문생성시 배달지 정보가 입력되면 입력된 정보를 배달지로 지정한다.")
+    void createOrderDelivery2() {
+        //given
+        User buyer = createUser("buyer");
+        User seller = createUser("seller");
+
+
+        Product product = registerProduct(seller, "상품A", 10000);
+
+        Address address = new Address("서울시 강남구", "역삼로 13", "102-123");
+        OrderRequest request = OrderRequest.builder()
+                .buyerId(buyer.getId())
+                .productId(product.getId())
+                .quantity(1)
+                .address(address)
+                .build();
+
+        //when
+        OrderResponse response = orderService.createOrder(request);
+
+        //then
+        assertThat(response.getDelivery()
+                .getAddress()).isEqualTo(address);
+    }
 
     private Product registerProduct(User seller, String name, int price) {
         Product product = Product.builder()
@@ -150,6 +207,15 @@ class OrderServiceTest {
     private User createUser(String username) {
         User user = User.builder()
                 .username(username)
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    private User createUserWithAddress(String username, Address address) {
+        User user = User.builder()
+                .username(username)
+                .address(address)
                 .build();
 
         return userRepository.save(user);
