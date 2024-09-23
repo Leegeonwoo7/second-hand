@@ -2,7 +2,9 @@ package com.secondhandplatform.user.service;
 
 import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.common.exception.DuplicateException;
+import com.secondhandplatform.delivery.domain.Address;
 import com.secondhandplatform.user.domain.*;
+import com.secondhandplatform.user.dto.request.AddressRequest;
 import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
 import com.secondhandplatform.user.dto.request.JoinRequest;
 import com.secondhandplatform.user.dto.request.LoginRequest;
@@ -244,5 +246,31 @@ class UserServiceTest {
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(BadRequestException.WRONG_LOGIN_INFO);
 
+    }
+
+    @Test
+    @DisplayName("회원의 배송주소를 등록한다.")
+    void registerAddress() {
+        //given
+        User userA = User.builder()
+                .username("userA")
+                .build();
+        User savedUser = userRepository.save(userA);
+
+        AddressRequest request = AddressRequest.builder()
+                .userId(savedUser.getId())
+                .city("경기도 군포시 금정동")
+                .zipcode("114번길 9")
+                .detail("102동 406호")
+                .build();
+
+        //when
+        userService.registerAddress(request);
+
+        //then
+        Optional<User> findUser = userRepository.findById(savedUser.getId());
+        assertThat(findUser.get()
+                .getAddress()
+                .getCity()).isEqualTo("경기도 군포시 금정동");
     }
 }
