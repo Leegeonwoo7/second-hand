@@ -3,6 +3,7 @@ package com.secondhandplatform.user.service;
 import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.common.exception.DuplicateException;
 import com.secondhandplatform.common.exception.MailSendException;
+import com.secondhandplatform.delivery.domain.Address;
 import com.secondhandplatform.provider.CertificationCodeProvider;
 import com.secondhandplatform.provider.EmailProvider;
 import com.secondhandplatform.provider.TokenProvider;
@@ -10,10 +11,7 @@ import com.secondhandplatform.user.domain.Certification;
 import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
-import com.secondhandplatform.user.dto.request.CertificationCodeCheckRequest;
-import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
-import com.secondhandplatform.user.dto.request.JoinRequest;
-import com.secondhandplatform.user.dto.request.LoginRequest;
+import com.secondhandplatform.user.dto.request.*;
 import com.secondhandplatform.user.dto.response.JoinResponse;
 import com.secondhandplatform.user.dto.response.LoginResponse;
 import com.secondhandplatform.user.dto.response.UserResponse;
@@ -155,6 +153,18 @@ public class UserService {
                 .token(token)
                 .name(findUser.getName())
                 .build();
+    }
+
+    //주소설정
+    public void registerAddress(AddressRequest request) {
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new BadRequestException(NOT_EXIST_USER));
+
+        String city = request.getCity();
+        String zipcode = request.getZipcode();
+        String detail = request.getDetail();
+        Address address = new Address(city, zipcode, detail);
+        user.registerAddress(address);
     }
 
 

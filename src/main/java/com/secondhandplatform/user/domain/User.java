@@ -1,5 +1,6 @@
 package com.secondhandplatform.user.domain;
 
+import com.secondhandplatform.delivery.domain.Address;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,6 +51,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SignupType signupType;
 
+    @Embedded
+    private Address address;
+
     //TODO 유저 - 찜 양방향 관계설정
     //@OneToMany
     //private List<Favorite> favorites;
@@ -64,6 +68,10 @@ public class User extends BaseEntity {
         this.name = name;
         this.userType = userType;
         this.signupType = signupType;
+    }
+
+    public void registerAddress(Address address) {
+        this.address = address;
     }
 
     @Override
