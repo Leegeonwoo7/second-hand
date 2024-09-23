@@ -59,7 +59,7 @@ public class User extends BaseEntity {
     //private List<Favorite> favorites;
 
     @Builder
-    private User(String username, String password, String email, String phone, LocalDate birthday, String name, UserType userType, SignupType signupType) {
+    private User(String username, String password, String email, String phone, LocalDate birthday, String name, UserType userType, SignupType signupType, Address address) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -68,6 +68,7 @@ public class User extends BaseEntity {
         this.name = name;
         this.userType = userType;
         this.signupType = signupType;
+        this.address = address;
     }
 
     public void registerAddress(Address address) {

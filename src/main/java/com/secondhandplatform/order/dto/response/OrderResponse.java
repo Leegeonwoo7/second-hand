@@ -34,6 +34,6 @@ public class OrderResponse {
                 .buyer(order.getBuyer())
                 .seller(order.getSeller())
                 .product(order.getProduct())
-                .build();¥
+                .build();
     }
 }

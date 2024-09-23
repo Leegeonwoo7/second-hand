@@ -1,5 +1,6 @@
 package com.secondhandplatform.order.dto.request;
 
+import com.secondhandplatform.delivery.domain.Address;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,5 +11,5 @@ public class OrderRequest {
     private Long buyerId;
     private Long productId;
     private int quantity;
-
+    private Address address;
 }

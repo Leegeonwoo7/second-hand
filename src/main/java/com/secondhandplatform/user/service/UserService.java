@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import static com.secondhandplatform.common.exception.BadRequestException.*;
 import static com.secondhandplatform.common.exception.DuplicateException.*;
@@ -156,7 +157,7 @@ public class UserService {
     }
 
     //주소설정
-    public void registerAddress(AddressRequest request) {
+    public void registerAddress(@RequestBody AddressRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new BadRequestException(NOT_EXIST_USER));
 

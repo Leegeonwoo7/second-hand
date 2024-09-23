@@ -1,6 +1,9 @@
 package com.secondhandplatform.order.service;
 
 import com.secondhandplatform.common.exception.BadRequestException;
+import com.secondhandplatform.delivery.domain.Address;
+import com.secondhandplatform.delivery.domain.Delivery;
+import com.secondhandplatform.delivery.domain.DeliveryRepository;
 import com.secondhandplatform.order.domain.Order;
 import com.secondhandplatform.order.domain.OrderRepository;
 import com.secondhandplatform.order.dto.request.OrderRequest;
@@ -12,42 +15,64 @@ import com.secondhandplatform.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.secondhandplatform.common.exception.BadRequestException.*;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final DeliveryRepository deliveryRepository;
 
     /**
-     * 구매자가 상품을 구매하면 구매자와 판매자는 해당 주문을 알고있어야함
-     *
+     * 사용자가 주문을 등록하는 그래프
+     * 1. 구매하려는 상품의 구매버튼 클릭
+     * 2. 수량선택
+     * 3. 배송지입력
+     * 4. 결제수단선택
+     * 5. 결제 (OrderStatus: INIT, Delivery: READY)
      */
-
+    // 주문등록
     public OrderResponse createOrder(OrderRequest orderRequest) {
         int quantity = orderRequest.getQuantity();
-
         Long buyerId = orderRequest.getBuyerId();
+        Long productId = orderRequest.getProductId();
+
         User buyer = userRepository.findById(buyerId)
                 .orElseThrow(() -> new BadRequestException(NOT_EXIST_USER));
-
-        Long productId = orderRequest.getProductId();
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BadRequestException(NOT_EXIST_PRODUCT));
         User seller = product.getUser();
+        Delivery delivery = initDelivery(orderRequest, buyer);
+        deliveryRepository.save(delivery);
 
-        if (seller == null) {
-            log.error("판매자 정의되지않음");
-        }
+        //결제로직
 
-        Order order = Order.createOrder(buyer, seller, product, quantity, null, null);
+        Order order = Order.createOrder(buyer, seller, product, quantity, null, delivery);
         Order savedOrder = orderRepository.save(order);
+
+        product.changeSellingStatus();
 
         return OrderResponse.of(savedOrder);
     }
+
+    private Delivery initDelivery(OrderRequest orderRequest, User buyer) {
+        Address address = orderRequest.getAddress();
+        if (address == null) {
+            address = buyer.getAddress();
+        }
+        return Delivery.builder()
+                .address(address)
+                .user(buyer)
+                .build();
+    }
+
+    // 주문취소
+
 }
