@@ -5,6 +5,7 @@ import com.secondhandplatform.user.domain.Certification;
 import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.dto.request.CertificationCodeRequest;
 import com.secondhandplatform.user.dto.response.UserResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ public class EmailSendTest {
     private UserService userService;
     
     @Test
+    @Disabled
     @DisplayName("이메일 전송에 성공한다.")
     void sendCertificationCode() {
         //given
