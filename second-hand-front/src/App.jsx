@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import JoinForm from "./components/JoinForm";
 import KakaoPayButton from "./components/KakaoPayButton";
+import LoginForm from "./components/LoginForm";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
             <Routes>
                 <Route path="/join" element={<JoinForm />} />
                 <Route path="/payment" element={<KakaoPayButton />} />
+                <Route path="/login" element={<LoginForm />}/>
             </Routes>
         </Router>
 

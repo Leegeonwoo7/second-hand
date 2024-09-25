@@ -1,4 +1,5 @@
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function JoinForm() {
     const [username, setUsername] = useState('');
@@ -10,8 +11,9 @@ export default function JoinForm() {
     const [certificationCode, setCertificationCode] = useState('');
     const [codeCheckMessage, setCodeCheckMessage] = useState('');
 
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!emailCertification){
@@ -21,19 +23,23 @@ export default function JoinForm() {
 
         const user = { username, email, password }
 
-        fetch('http://localhost:8080/users/join', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        })
-            .then(response => {
-                console.log('응답: ', response)
-            })
-            .catch((error) => {
-                console.log('ERROR: ', error);
-            })
+        try {
+            const response = await fetch('http://localhost:8080/users/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user),
+            });
+            if (response.ok) {
+                console.log('OK')
+                navigate('/login')
+            }
+        } catch (error){
+            console.log("Error: ", error);
+        }
+
+
     }
 
     const handleEmailCertification = () => {
