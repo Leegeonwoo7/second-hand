@@ -71,12 +71,13 @@ public class UserService {
         String email = request.getEmail();
 
         String certificationCode = CertificationCodeProvider.createCertificationCode();
-        boolean isSuccess = emailProvider.sendMail(email, certificationCode);
+        //TODO 개발을 위해 이메일 비활성화
+//        boolean isSuccess = emailProvider.sendMail(email, certificationCode);
 
-        if (!isSuccess) {
-            log.error("이메일 전송중 오류 발생");
-            throw new MailSendException(MAIL_SEND_FAIL);
-        }
+//        if (!isSuccess) {
+//            log.error("이메일 전송중 오류 발생");
+//            throw new MailSendException(MAIL_SEND_FAIL);
+//        }
 
         Certification certification = Certification.create(email, certificationCode);
         certificationRepository.save(certification);

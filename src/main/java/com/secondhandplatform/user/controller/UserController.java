@@ -61,11 +61,13 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody JoinRequest request) {
         JoinResponse response = userService.join(request);
-
+        log.debug("POST /users/join");
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/users/login"));
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .headers(headers)
+                .body(response);
     }
 
     @PostMapping("/login")
@@ -73,6 +75,11 @@ public class UserController {
         LoginResponse response = userService.login(request);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/login")
+    public void loginForm() {
+        log.info("GET /users/login");
     }
 
 }
