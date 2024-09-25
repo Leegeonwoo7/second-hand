@@ -13,11 +13,9 @@ import java.time.LocalDate;
 public class JoinResponse {
 
     private Long userId;
-
     //TODO 로그인아이디, 비밀번호는 추후 삭제
     private String username;
     private String password;
-
     private String email;
     private String phone;
     private LocalDate birthday;

@@ -68,7 +68,6 @@ public class UserService {
     // 이메일 인증번호를 전송함과 동시에 아이디 중복체크와 이메일 중복체크를 수행
     // 그럼 쿼리를 또 조회해야하는데... 그냥 stateless하게 클라이언트에 이메일 중복체크, 아이디 중복체크 여부를 준다면?
     public UserResponse sendCertificationCode(CertificationCodeRequest request) {
-        String username = request.getUsername();
         String email = request.getEmail();
 
         String certificationCode = CertificationCodeProvider.createCertificationCode();
@@ -115,11 +114,6 @@ public class UserService {
     public JoinResponse join(JoinRequest request) {
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
         request.setPassword(encodedPassword);
-
-        if (encodedPassword.length() < 30) {
-            log.error("비밀번호 인코딩이 잘못됨");
-            throw new RuntimeException("비밀번호 인코딩이 잘못됨");
-        }
 
         User user = request.toEntity();
         log.info("비밀번호: {}", user.getPassword());

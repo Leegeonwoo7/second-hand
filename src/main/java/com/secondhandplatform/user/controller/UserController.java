@@ -8,8 +8,12 @@ import com.secondhandplatform.user.dto.response.UserResponse;
 import com.secondhandplatform.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @Slf4j
 @RestController
@@ -38,14 +42,15 @@ public class UserController {
                 .body(response);
     }
 
-    @GetMapping("/email-certification")
+    //이메일 발송
+    @PostMapping("/email-certification")
     public ResponseEntity<?> sendCertificationEmail(@RequestBody CertificationCodeRequest request) {
         UserResponse response = userService.sendCertificationCode(request);
 
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/email-certification")
+    @PostMapping("/code-check")
     public ResponseEntity<?> checkCertificationCode(@RequestBody CertificationCodeCheckRequest request) {
         UserResponse response = userService.certificationCheck(request);
 
@@ -57,7 +62,10 @@ public class UserController {
     public ResponseEntity<?> join(@RequestBody JoinRequest request) {
         JoinResponse response = userService.join(request);
 
-        return ResponseEntity.ok(response);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/users/login"));
+
+        return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
     @PostMapping("/login")
