@@ -8,6 +8,8 @@ import com.secondhandplatform.order.domain.Order;
 import com.secondhandplatform.order.domain.OrderRepository;
 import com.secondhandplatform.order.dto.request.OrderRequest;
 import com.secondhandplatform.order.dto.response.OrderResponse;
+import com.secondhandplatform.payment.dto.response.KakaoPayReadyResponse;
+import com.secondhandplatform.payment.service.KakaoPayService;
 import com.secondhandplatform.product.domain.Product;
 import com.secondhandplatform.product.domain.ProductRepository;
 import com.secondhandplatform.user.domain.User;
@@ -30,6 +32,8 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final DeliveryRepository deliveryRepository;
 
+    private final KakaoPayService kakaoPayService;
+
     /**
      * 사용자가 주문을 등록하는 그래프
      * 1. 구매하려는 상품의 구매버튼 클릭
@@ -51,8 +55,6 @@ public class OrderService {
         User seller = product.getUser();
         Delivery delivery = initDelivery(orderRequest, buyer);
         deliveryRepository.save(delivery);
-
-        //결제로직
 
         Order order = Order.createOrder(buyer, seller, product, quantity, null, delivery);
         Order savedOrder = orderRepository.save(order);
