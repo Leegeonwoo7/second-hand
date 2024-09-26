@@ -1,9 +1,12 @@
 export default function KakaoPayButton() {
+    const token = sessionStorage.getItem('token');
+
     const handlePayment = () => {
         fetch('http://localhost:8080/payment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify({
                 totalAmount: 10000,

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import JoinForm from "./components/JoinForm";
 import KakaoPayButton from "./components/KakaoPayButton";
 import LoginForm from "./components/LoginForm";
+import MainProductListView from "./components/MainProductListView";
 
 function App() {
     return (
@@ -11,6 +12,9 @@ function App() {
             <div>
                 <nav>
                     <ul>
+                        <li>
+                            <Link to="/main">메인화면</Link>
+                        </li>
                         <li>
                             <Link to="/join">회원가입</Link>
                         </li>
@@ -27,6 +31,7 @@ function App() {
                 <Route path="/join" element={<JoinForm />} />
                 <Route path="/payment" element={<KakaoPayButton />} />
                 <Route path="/login" element={<LoginForm />}/>
+                <Route path="/main" element={<MainProductListView/>}/>
             </Routes>
         </Router>
 
