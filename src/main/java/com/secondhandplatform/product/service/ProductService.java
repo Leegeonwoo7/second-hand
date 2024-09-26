@@ -71,11 +71,20 @@ public class ProductService {
     }
 
     // 회원의 모든상품조회
-    public List<ProductResponse> findProductList(Long userId) {
+    public List<ProductResponse> findProductsByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException(NOT_EXIST_USER));
 
         List<Product> productList = productRepository.findByUser(user);
+
+        return productList.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    // 메인화면 상품목록조회
+    public List<ProductResponse> findProducts() {
+        List<Product> productList = productRepository.findAll();
 
         return productList.stream()
                 .map(ProductResponse::of)

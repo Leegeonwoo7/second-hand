@@ -44,8 +44,15 @@ public class ProductController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> findProductList(@PathVariable Long userId) {
-        List<ProductResponse> response = productService.findProductList(userId);
+        List<ProductResponse> response = productService.findProductsByUser(userId);
 
+        return ResponseEntity.ok(response);
+    }
+
+    //메인화면 상품목록조회
+    @GetMapping
+    public ResponseEntity<?> findAllProduct() {
+        List<ProductResponse> response = productService.findProducts();
         return ResponseEntity.ok(response);
     }
 

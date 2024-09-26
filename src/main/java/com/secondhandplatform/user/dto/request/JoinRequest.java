@@ -31,7 +31,6 @@ public class JoinRequest {
 
     public User toEntity() {
         String toUseName = !StringUtils.hasText(this.name) ? username : this.name;
-        System.out.println("toUseName = " + toUseName);
 
         return User.builder()
                 .username(this.username)
