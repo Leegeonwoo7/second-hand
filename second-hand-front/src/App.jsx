@@ -1,10 +1,10 @@
 import './App.css';
 import React from "react";
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import JoinForm from "./components/JoinForm";
-import KakaoPayButton from "./components/KakaoPayButton";
-import LoginForm from "./components/LoginForm";
-import MainProductListView from "./components/MainProductListView";
+import JoinForm from "./components/user/JoinForm";
+import KakaoPayButton from "./components/payment/KakaoPayButton";
+import LoginForm from "./components/user/LoginForm";
+import MainProductListView from "./components/product/MainProductListView";
 
 function App() {
     return (
