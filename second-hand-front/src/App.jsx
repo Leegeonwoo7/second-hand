@@ -6,6 +6,7 @@ import KakaoPayButton from "./components/payment/KakaoPayButton";
 import LoginForm from "./components/user/LoginForm";
 import MainProductListView from "./components/product/MainProductListView";
 import ProductForm from "./components/product/ProductForm";
+import ProductDetailView from "./components/product/ProductDetailView";
 
 function App() {
     return (
@@ -28,7 +29,6 @@ function App() {
                         <li>
                             <Link to="/payment">결제</Link>
                         </li>
-
                     </ul>
                 </nav>
             </div>
@@ -38,6 +38,7 @@ function App() {
                 <Route path="/login" element={<LoginForm />}/>
                 <Route path="/main" element={<MainProductListView/>}/>
                 <Route path="/newProduct" element={<ProductForm/>}/>
+                <Route path="/products/:productId" element={<ProductDetailView/>}/>
             </Routes>
         </Router>
 
