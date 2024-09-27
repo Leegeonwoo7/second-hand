@@ -43,8 +43,15 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{productId}")
+    public ResponseEntity<?> findProduct(@PathVariable Long productId) {
+
+    }
+
+
+    // 상품조회시에 userId 필요?
     @GetMapping("/{userId}/{productId}")
-    public ResponseEntity<?> findProduct(@PathVariable Long userId, @PathVariable Long productId) {
+    public ResponseEntity<?> findProduct2(@PathVariable Long userId, @PathVariable Long productId) {
         ProductResponse response = productService.findProduct(userId, productId);
 
         return ResponseEntity.ok(response);

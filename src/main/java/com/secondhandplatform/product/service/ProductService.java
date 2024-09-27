@@ -51,19 +51,11 @@ public class ProductService {
     }
 
     // 상품 단건조회
-    public ProductResponse findProduct(Long userId, Long productId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public ProductResponse findProduct(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
-
-        User user = optionalUser.orElseThrow(()
-                -> new BadRequestException(NOT_EXIST_USER));
 
         Product product = optionalProduct.orElseThrow(()
                 -> new BadRequestException(NOT_EXIST_PRODUCT));
-
-        if (!(product.getUser().equals(user))){
-            throw new BadRequestException(DEFAULT_MESSAGE);
-        }
 
         return ProductResponse.of(product);
     }
