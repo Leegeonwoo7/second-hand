@@ -8,6 +8,8 @@ import com.secondhandplatform.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,14 @@ public class ProductController {
 
     @PostMapping("/new")
     public ResponseEntity<?> registerProduct(@RequestBody RegisterProductRequest request) {
-        log.debug("userId: {}", request.getUserId());
-        ProductResponse response = productService.registerProduct(request);
+        // 시큐리티에서 헤더에 있는 토큰으로부터 식별자인 userId를 읽어옴
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        log.info("POST /products/new - userId: {}", userId);
+
+        ProductResponse response = productService.registerProduct(request, userId);
 
         return ResponseEntity.ok(response);
     }

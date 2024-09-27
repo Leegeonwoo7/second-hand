@@ -1,5 +1,6 @@
 package com.secondhandplatform.common.filter;
 
+import com.secondhandplatform.common.exception.BadRequestException;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.provider.TokenProvider;
 import com.secondhandplatform.user.domain.UserRepository;
@@ -24,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.secondhandplatform.common.exception.BadRequestException.*;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -45,20 +48,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
             String userId = tokenProvider.validate(token);
             if (userId == null) {
-                log.debug("tokenProvider.validate: {}", userId);
                 filterChain.doFilter(request, response);
             }
 
-            Optional<User> optionalUser = userRepository.findById(Long.valueOf(userId));
-
-            User user;
-
-            if (optionalUser.isPresent()) {
-                user = optionalUser.get();
-            } else {
-                log.warn("optionalUser가 null입니다.");
-                throw new RuntimeException();
-            }
+            User user = userRepository.findById(Long.valueOf(userId))
+                    .orElseThrow(() -> new BadRequestException(DEFAULT_MESSAGE));
 
             String role = user.getUserType()
                     .toString();
@@ -68,7 +62,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             authorities.add(new SimpleGrantedAuthority(role));
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), null, authorities);
+            // 수정 user.getUsername -> user.getId
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getId(), null, authorities);
 
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -79,8 +74,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-
-
 
     private String parseBearerToken(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");

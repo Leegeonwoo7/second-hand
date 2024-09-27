@@ -27,9 +27,7 @@ public class ProductService {
     private final UserRepository userRepository;
 
     // 상품 등록
-    public ProductResponse registerProduct(RegisterProductRequest request) {
-        Long userId = request.getUserId();
-
+    public ProductResponse registerProduct(RegisterProductRequest request, Long userId) {
         Optional<User> findUser = userRepository.findById(userId);
         User user = findUser.orElseThrow(()
                 -> new BadRequestException(LOGIN_FIRST));
