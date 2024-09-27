@@ -43,21 +43,17 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
+    //상품 단건조회
     @GetMapping("/{productId}")
     public ResponseEntity<?> findProduct(@PathVariable Long productId) {
-
-    }
-
-
-    // 상품조회시에 userId 필요?
-    @GetMapping("/{userId}/{productId}")
-    public ResponseEntity<?> findProduct2(@PathVariable Long userId, @PathVariable Long productId) {
-        ProductResponse response = productService.findProduct(userId, productId);
+        log.info("GET - /products/{productId}");
+        ProductResponse response = productService.findProduct(productId);
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{userId}")
+    //회원이 등록한 상품목록 조회
+    @GetMapping("/user/{userId}")
     public ResponseEntity<?> findProductList(@PathVariable Long userId) {
         List<ProductResponse> response = productService.findProductsByUser(userId);
 
