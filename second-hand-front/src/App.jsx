@@ -5,6 +5,7 @@ import JoinForm from "./components/user/JoinForm";
 import KakaoPayButton from "./components/payment/KakaoPayButton";
 import LoginForm from "./components/user/LoginForm";
 import MainProductListView from "./components/product/MainProductListView";
+import ProductForm from "./components/product/ProductForm";
 
 function App() {
     return (
@@ -19,11 +20,15 @@ function App() {
                             <Link to="/join">회원가입</Link>
                         </li>
                         <li>
-                            <Link to="/payment">결제</Link>
-                        </li>
-                        <li>
                             <Link to="/login">로그인</Link>
                         </li>
+                        <li>
+                            <Link to="/newProduct">상품등록</Link>
+                        </li>
+                        <li>
+                            <Link to="/payment">결제</Link>
+                        </li>
+
                     </ul>
                 </nav>
             </div>
@@ -32,6 +37,7 @@ function App() {
                 <Route path="/payment" element={<KakaoPayButton />} />
                 <Route path="/login" element={<LoginForm />}/>
                 <Route path="/main" element={<MainProductListView/>}/>
+                <Route path="/newProduct" element={<ProductForm/>}/>
             </Routes>
         </Router>
 

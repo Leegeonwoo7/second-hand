@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import './ProductList.css';
 import ProductView from "./ProductView";
 
-export default function MainProductListView(props) {
+export default function MainProductListView() {
     const [products, setProducts] = useState([]);
     const token = sessionStorage.getItem('token');
 
