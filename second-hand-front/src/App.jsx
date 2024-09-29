@@ -7,6 +7,7 @@ import LoginForm from "./components/user/LoginForm";
 import MainProductListView from "./components/product/MainProductListView";
 import ProductForm from "./components/product/ProductForm";
 import ProductDetailView from "./components/product/ProductDetailView";
+import OrderView from "./components/order/OrderView";
 
 function App() {
     return (
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/main" element={<MainProductListView/>}/>
                 <Route path="/newProduct" element={<ProductForm/>}/>
                 <Route path="/products/:productId" element={<ProductDetailView/>}/>
+                <Route path="/orders" element={<OrderView />}/>
             </Routes>
         </Router>
 
