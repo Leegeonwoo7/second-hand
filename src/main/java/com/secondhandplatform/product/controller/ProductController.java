@@ -30,7 +30,6 @@ public class ProductController {
         Long userId = Long.parseLong(authentication.getName());
 
         log.info("POST /products/new - userId: {}", userId);
-
         ProductResponse response = productService.registerProduct(request, userId);
 
         return ResponseEntity.ok(response);

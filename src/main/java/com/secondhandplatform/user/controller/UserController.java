@@ -77,9 +77,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/login")
-    public void loginForm() {
-        log.info("GET /users/login");
-    }
+
 
 }

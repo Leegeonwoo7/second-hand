@@ -17,7 +17,6 @@ public class ProductResponse {
     private String name;
     private String description;
     private int price;
-    private int quantity;
     private Category category;
     private ProductStatus productStatus;
     private SellingStatus sellingStatus;

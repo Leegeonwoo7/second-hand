@@ -1,6 +1,5 @@
 package com.secondhandplatform.order.domain;
 
-import com.secondhandplatform.payment.domain.PaymentType;
 import com.secondhandplatform.user.domain.BaseEntity;
 import com.secondhandplatform.delivery.domain.Delivery;
 import com.secondhandplatform.payment.domain.Payment;
@@ -21,15 +20,12 @@ public class Order extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_status", nullable = false)
+    @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @Column(name = "order_price", nullable = false)
+    @Column(name = "order_price")
     private int totalPrice;
-
-    @Column(name = "order_quantity", nullable = false)
-    private int quantity;
 
     @OneToOne
     @JoinColumn(name = "order_id")
@@ -55,10 +51,9 @@ public class Order extends BaseEntity {
     private Product product;
 
     @Builder
-    private Order(OrderStatus orderStatus, int totalPrice, int quantity, Payment payment, Delivery delivery, User buyer, User seller, Product product) {
+    private Order(OrderStatus orderStatus, int totalPrice, Payment payment, Delivery delivery, User buyer, User seller, Product product) {
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
-        this.quantity = quantity;
         this.payment = payment;
         this.delivery = delivery;
         this.buyer = buyer;
@@ -66,8 +61,8 @@ public class Order extends BaseEntity {
         this.product = product;
     }
 
-    public static Order createOrder(User buyer, User seller, Product product, int quantity, Payment payment, Delivery delivery) {
-        int totalPrice = product.getPrice() * quantity;
+    public static Order createOrder(User buyer, User seller, Product product, Payment payment, Delivery delivery) {
+        int totalPrice = product.getPrice();
 
         return Order.builder()
                 .buyer(buyer)
@@ -75,7 +70,6 @@ public class Order extends BaseEntity {
                 .product(product)
                 .orderStatus(OrderStatus.INIT)
                 .payment(payment)
-                .quantity(quantity)
                 .delivery(delivery)
                 .totalPrice(totalPrice)
                 .build();

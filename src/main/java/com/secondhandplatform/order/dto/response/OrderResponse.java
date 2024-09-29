@@ -16,7 +16,6 @@ public class OrderResponse {
     private Long id;
     private OrderStatus orderStatus;
     private int totalPrice;
-    private int quantity;
     private Payment payment;
     private Delivery delivery;
     private User buyer;
@@ -28,7 +27,6 @@ public class OrderResponse {
                 .id(order.getId())
                 .orderStatus(order.getOrderStatus())
                 .totalPrice(order.getTotalPrice())
-                .quantity(order.getQuantity())
                 .payment(order.getPayment())
                 .delivery(order.getDelivery())
                 .buyer(order.getBuyer())

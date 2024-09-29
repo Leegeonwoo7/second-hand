@@ -7,6 +7,7 @@ import com.secondhandplatform.product.domain.SellingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
@@ -16,7 +17,6 @@ public class RegisterProductRequest {
     private String name;
     private String description;
     private int price;
-    private int quantity;
     private Category category;
     private ProductStatus productStatus;
     private SellingStatus sellingStatus;
@@ -26,7 +26,6 @@ public class RegisterProductRequest {
                 .name(this.name)
                 .description(this.description)
                 .price(this.price)
-                .quantity(this.quantity)
                 .category(this.category)
                 .productStatus(this.productStatus)
                 .sellingStatus(this.sellingStatus)

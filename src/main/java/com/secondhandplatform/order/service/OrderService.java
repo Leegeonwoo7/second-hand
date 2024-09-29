@@ -43,9 +43,7 @@ public class OrderService {
      * 5. 결제 (OrderStatus: INIT, Delivery: READY)
      */
     // 주문등록
-    public OrderResponse createOrder(OrderRequest orderRequest) {
-        int quantity = orderRequest.getQuantity();
-        Long buyerId = orderRequest.getBuyerId();
+    public OrderResponse createOrder(OrderRequest orderRequest, Long buyerId) {
         Long productId = orderRequest.getProductId();
 
         User buyer = userRepository.findById(buyerId)
@@ -53,10 +51,10 @@ public class OrderService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BadRequestException(NOT_EXIST_PRODUCT));
         User seller = product.getUser();
-        Delivery delivery = initDelivery(orderRequest, buyer);
+        Delivery delivery = initDelivery(buyer);
         deliveryRepository.save(delivery);
 
-        Order order = Order.createOrder(buyer, seller, product, quantity, null, delivery);
+        Order order = Order.createOrder(buyer, seller, product, null, delivery);
         Order savedOrder = orderRepository.save(order);
 
         product.changeSellingStatus();
@@ -64,11 +62,16 @@ public class OrderService {
         return OrderResponse.of(savedOrder);
     }
 
-    private Delivery initDelivery(OrderRequest orderRequest, User buyer) {
-        Address address = orderRequest.getAddress();
-        if (address == null) {
-            address = buyer.getAddress();
-        }
+    public OrderResponse findOrderDetail(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BadRequestException(DEFAULT_MESSAGE));
+
+        return OrderResponse.of(order);
+    }
+
+    private Delivery initDelivery(User buyer) {
+        Address address = buyer.getAddress();
+
         return Delivery.builder()
                 .address(address)
                 .user(buyer)
