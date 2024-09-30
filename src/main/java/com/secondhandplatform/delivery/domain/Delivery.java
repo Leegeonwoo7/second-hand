@@ -19,18 +19,15 @@ public class Delivery extends BaseEntity {
     @Embedded
     private Address address;
 
-    @Column(name = "delivery_status")
-    @Enumerated(EnumType.STRING)
-    private DeliveryStatus deliveryStatus;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    private String receiverName;
+
     @Builder
     private Delivery(Address address, User user) {
         this.address = address;
-        this.deliveryStatus = DeliveryStatus.READY;
         this.user = user;
     }
 }

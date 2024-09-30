@@ -12,6 +12,7 @@ import com.secondhandplatform.user.domain.CertificationRepository;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
 import com.secondhandplatform.user.dto.request.*;
+import com.secondhandplatform.user.dto.response.AddressResponse;
 import com.secondhandplatform.user.dto.response.JoinResponse;
 import com.secondhandplatform.user.dto.response.LoginResponse;
 import com.secondhandplatform.user.dto.response.UserResponse;
@@ -150,18 +151,4 @@ public class UserService {
                 .name(findUser.getName())
                 .build();
     }
-
-    //주소설정
-    public void registerAddress(@RequestBody AddressRequest request) {
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new BadRequestException(NOT_EXIST_USER));
-
-        String city = request.getCity();
-        String zipcode = request.getZipcode();
-        String detail = request.getDetail();
-        Address address = new Address(city, zipcode, detail);
-        user.registerAddress(address);
-    }
-
-
 }
