@@ -37,17 +37,26 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (request.getRequestURI()
+                .startsWith("/products")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         log.debug("Start my filter ...");
 
         try {
             String token = parseBearerToken(request);
             if (token == null) {
+                log.info("토큰이 비어있습니다.");
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            //토큰이 위조되었는지 확인하고 위조되지 않은 토큰일 경우 USER의 식별자 반환
             String userId = tokenProvider.validate(token);
             if (userId == null) {
+                log.info("유효한 토큰이 아닙니다.");
                 filterChain.doFilter(request, response);
             }
 
