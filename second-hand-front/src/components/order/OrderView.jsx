@@ -7,13 +7,13 @@ export default function OrderView() {
     const {product} = routeLocation.state || {};
     console.log(product.name);
 
-    useEffect(() => {
-        async function getUserInfo() {
-            try{
-                const response await fetch('http://localhost:8080/users')
-            }
-        }
-    })
+    // useEffect(() => {
+    //     async function getUserInfo() {
+    //         try{
+    //             // const response await fetch('http://localhost:8080/users')
+    //         }
+    //     }
+    // })
 
     return (
         <div>

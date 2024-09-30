@@ -16,7 +16,7 @@ function App() {
                 <nav>
                     <ul>
                         <li>
-                            <Link to="/main">메인화면</Link>
+                            <Link to="/">메인화면</Link>
                         </li>
                         <li>
                             <Link to="/join">회원가입</Link>
@@ -37,7 +37,7 @@ function App() {
                 <Route path="/join" element={<JoinForm />} />
                 <Route path="/payment" element={<KakaoPayButton />} />
                 <Route path="/login" element={<LoginForm />}/>
-                <Route path="/main" element={<MainProductListView/>}/>
+                <Route path="/" element={<MainProductListView/>}/>
                 <Route path="/newProduct" element={<ProductForm/>}/>
                 <Route path="/products/:productId" element={<ProductDetailView/>}/>
                 <Route path="/orders" element={<OrderView />}/>

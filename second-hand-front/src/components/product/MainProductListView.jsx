@@ -4,16 +4,11 @@ import ProductView from "./ProductView";
 
 export default function MainProductListView() {
     const [products, setProducts] = useState([]);
-    const token = sessionStorage.getItem('token');
 
     useEffect(() => {
         async function fetchProducts() {
             try {
-                const response = await fetch('http://localhost:8080/products', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
+                const response = await fetch('http://localhost:8080/products');
                 if (!response.ok) {
                     throw new Error('상품을 불러오는데 실패했습니다.');
                 }
