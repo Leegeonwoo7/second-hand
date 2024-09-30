@@ -37,12 +37,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI()
-                .startsWith("/products")) {
-            filterChain.doFilter(request, response);
+        String requestURI = request.getRequestURI();
+        boolean skipFilter = isSkipFilter(requestURI);
+
+        if (skipFilter) {
+            log.info("skip request URI: {}", requestURI);
+            filterChain.doFilter(request,response);
             return;
         }
 
+        log.info("request URI: {}", requestURI);
         log.debug("Start my filter ...");
 
         try {
@@ -82,6 +86,24 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             e.printStackTrace();
         }
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isSkipFilter(String requestURI) {
+        if ("/products".equals(requestURI) ||
+                "/users/login".equals(requestURI) ||
+                "/users/join".equals(requestURI) ||
+                "/users/id-check".equals(requestURI) ||
+                "/users/email-check".equals(requestURI) ||
+                "/users/email-certification".equals(requestURI) ||
+                "/users/code-check".equals(requestURI)) {
+            return true;
+        }
+
+        if (requestURI.matches("^/products/\\d+$") || requestURI.matches("^/products/user/\\d+$")) {
+            return true;
+        }
+
+        return false;
     }
 
     private String parseBearerToken(HttpServletRequest request) {

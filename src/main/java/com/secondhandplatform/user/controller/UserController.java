@@ -45,6 +45,7 @@ public class UserController {
     //이메일 발송
     @PostMapping("/email-certification")
     public ResponseEntity<?> sendCertificationEmail(@RequestBody CertificationCodeRequest request) {
+        log.info("POST - /users/email-certification");
         UserResponse response = userService.sendCertificationCode(request);
 
         return ResponseEntity.ok(response);
@@ -52,6 +53,7 @@ public class UserController {
 
     @PostMapping("/code-check")
     public ResponseEntity<?> checkCertificationCode(@RequestBody CertificationCodeCheckRequest request) {
+        log.info("POST - /users/code-check");
         UserResponse response = userService.certificationCheck(request);
 
         return ResponseEntity.ok()
@@ -72,6 +74,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        log.info("POST - /users/login");
         LoginResponse response = userService.login(request);
 
         return ResponseEntity.ok(response);
