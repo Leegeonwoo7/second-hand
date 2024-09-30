@@ -8,8 +8,10 @@ import MainProductListView from "./components/product/MainProductListView";
 import ProductForm from "./components/product/ProductForm";
 import ProductDetailView from "./components/product/ProductDetailView";
 import OrderView from "./components/order/OrderView";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
+
     return (
         <Router>
             <div>
@@ -38,13 +40,12 @@ function App() {
                 <Route path="/payment" element={<KakaoPayButton />} />
                 <Route path="/login" element={<LoginForm />}/>
                 <Route path="/" element={<MainProductListView/>}/>
+                <Route path="/newProduct" element={<PrivateRoute element={<ProductForm/>}/>} />
                 <Route path="/newProduct" element={<ProductForm/>}/>
                 <Route path="/products/:productId" element={<ProductDetailView/>}/>
                 <Route path="/orders" element={<OrderView />}/>
             </Routes>
         </Router>
-
-
     )
 }
 
