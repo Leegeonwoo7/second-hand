@@ -1,6 +1,8 @@
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function LoginForm() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,6 +12,7 @@ export default function LoginForm() {
         sessionStorage.removeItem('token');
         localStorage.clear();
         setIsLoggedIn(false);
+        navigate("/");
     }
 
     const handleLoginSubmit = async (e) => {
