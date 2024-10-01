@@ -9,6 +9,7 @@ export default function ProductForm() {
     const token = sessionStorage.getItem('token');
     const product = { name, description, price }
 
+
     const handleNameChange = (e) => {
         setName(e.target.value);
         localStorage.setItem('name', e.target.value);
@@ -36,7 +37,7 @@ export default function ProductForm() {
                 body: JSON.stringify(product)
             });
             if (response.ok) {
-                navigate('/main');
+                navigate('/');
             }
         } catch (error){
             console.log("Error: ", error);
