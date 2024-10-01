@@ -8,6 +8,7 @@ export default function LoginForm() {
 
     const handleLogout = () => {
         sessionStorage.removeItem('token');
+        localStorage.clear();
         setIsLoggedIn(false);
     }
 
