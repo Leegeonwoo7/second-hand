@@ -57,4 +57,37 @@ class ProductRepositoryTest {
         //then
         assertThat(productList).hasSize(2);
     }
+    
+    @Test
+    @DisplayName("User객체로 등록한상품목록들을 조회한다.")
+    void findByUser() {
+        //given
+        User seller = User.builder()
+                .username("seller")
+                .build();
+        userRepository.save(seller);
+
+        Product product1 = Product.builder()
+                .name("아이패드")
+                .price(100000)
+                .build();
+
+        Product product2= Product.builder()
+                .name("아이폰")
+                .price(200000)
+                .build();
+
+        product1.registerBy(seller);
+        product2.registerBy(seller);
+
+        productRepository.saveAll(List.of(product1, product2));
+
+        //when
+        List<Product> productList = productRepository.findByUser(seller);
+
+        //then
+        assertThat(productList).hasSize(2);
+        assertThat(productList).extracting("name", "price")
+                .containsExactlyInAnyOrder(tuple("아이폰", 200000), tuple("아이패드", 100000));
+    }
 }

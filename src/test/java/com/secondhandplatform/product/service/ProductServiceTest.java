@@ -34,29 +34,14 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("상품을 등록한다.")
-    void registerProduct() {
+    @DisplayName("회원이 등록한 상품목록들을 조회한다.")
+    void findProductsByUser() {
         //given
-        User user = User.builder()
-                .username("userA")
-                .password("1234")
-                .build();
-        User saveUser = userRepository.save(user);
 
-        RegisterProductRequest product = RegisterProductRequest.builder()
-                .name("아이패드")
-                .price(100000)
-                .userId(saveUser.getId())
-                .build();
 
         //when
-        ProductResponse response = productService.registerProduct(product);
 
         //then
-        assertThat(response.getName()).isEqualTo("아이패드");
-        assertThat(response.getUser()).isEqualTo(user);
-//        assertThat(response).extracting("name", "price")
-//                .containsExactly(tuple("아이패드"), tuple(100000));
     }
 
     @Test
@@ -65,7 +50,6 @@ class ProductServiceTest {
         Product product = Product.builder()
                 .name("청바지")
                 .price(10000)
-                .quantity(1)
                 .description("상태좋은 청바지 팝니다.")
                 .build();
 

@@ -19,7 +19,6 @@ class ProductTest {
                 .price(20000)
                 .productStatus(ProductStatus.GOOD)
                 .category(Category.PANTS)
-                .quantity(1)
                 .sellingStatus(SellingStatus.SELLING)
                 .build();
 
