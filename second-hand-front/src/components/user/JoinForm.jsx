@@ -38,8 +38,6 @@ export default function JoinForm() {
         } catch (error){
             console.log("Error: ", error);
         }
-
-
     }
 
     const handleEmailCertification = () => {

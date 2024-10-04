@@ -4,6 +4,7 @@ export default function ProductView({ product }) {
     const navigate = useNavigate()
 
     const handleClick = () => {
+
         navigate(`/products/${product.id}`);
     }
 

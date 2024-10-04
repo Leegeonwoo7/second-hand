@@ -41,7 +41,6 @@ function App() {
                 <Route path="/login" element={<LoginForm />}/>
                 <Route path="/" element={<MainProductListView/>}/>
                 <Route path="/newProduct" element={<PrivateRoute element={<ProductForm/>}/>} />
-                <Route path="/newProduct" element={<ProductForm/>}/>
                 <Route path="/products/:productId" element={<ProductDetailView/>}/>
                 <Route path="/orders" element={<OrderView />}/>
             </Routes>
