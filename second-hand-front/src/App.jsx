@@ -1,6 +1,6 @@
 import './App.css';
-import React from "react";
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {BrowserRouter as Router, Link, Route, Routes, useNavigate} from "react-router-dom";
 import JoinForm from "./components/user/JoinForm";
 import KakaoPayButton from "./components/payment/KakaoPayButton";
 import LoginForm from "./components/user/LoginForm";
@@ -11,6 +11,16 @@ import OrderView from "./components/order/OrderView";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
 
     return (
         <Router>
@@ -23,9 +33,18 @@ function App() {
                         <li>
                             <Link to="/join">회원가입</Link>
                         </li>
-                        <li>
-                            <Link to="/login">로그인</Link>
-                        </li>
+
+                        {!isLoggedIn ? (
+                            <li>
+                                <Link to="/login">로그인</Link>
+                            </li>
+                        ) : (
+                            <li>
+                                {/*TODO*/}
+                                <Link to="/TODO">내 상점</Link>
+                            </li>
+                        )}
+
                         <li>
                             <Link to="/newProduct">상품등록</Link>
                         </li>
