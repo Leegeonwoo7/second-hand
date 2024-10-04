@@ -10,6 +10,7 @@ import com.secondhandplatform.product.dto.response.ProductResponse;
 import com.secondhandplatform.user.domain.User;
 import com.secondhandplatform.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.secondhandplatform.common.exception.BadRequestException.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -82,17 +84,19 @@ public class ProductService {
     }
 
     // 상품삭제
-    public void removeProduct(RemoveProductRequest request) {
+    public void removeProduct(RemoveProductRequest request, Long userId) {
         Long productId = request.getProductId();
-        Long userId = request.getUserId();
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BadRequestException(NOT_EXIST_PRODUCT));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BadRequestException(DEFAULT_MESSAGE));
 
-        productRepository.delete(product);
+        if (product.getUser().equals(user)) {
+            productRepository.delete(product);
+            return;
+        }
+
+        log.error("상품의 소유자와 로그인된 사용자가 일치하지 않습니다.");
     }
-
-
-
-
 }

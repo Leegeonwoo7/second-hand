@@ -66,8 +66,12 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-//    @DeleteMapping
-//    public void deleteProduct(@RequestBody RemoveProductRequest request) {
-//        productService.removeProduct(request);
-//    }
+    @DeleteMapping
+    public void deleteProduct(@RequestBody RemoveProductRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+
+        productService.removeProduct(request, userId);
+    }
 }

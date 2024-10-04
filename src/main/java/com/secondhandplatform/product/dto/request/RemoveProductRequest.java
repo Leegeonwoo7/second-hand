@@ -6,5 +6,4 @@ import lombok.Getter;
 public class RemoveProductRequest {
 
     private Long productId;
-    private Long userId;
 }

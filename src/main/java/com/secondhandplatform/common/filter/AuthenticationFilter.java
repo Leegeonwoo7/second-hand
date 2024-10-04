@@ -89,6 +89,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
 
     private boolean isSkipFilter(String requestURI) {
+        log.info("Request URI: {}", requestURI);
         if ("/products".equals(requestURI) ||
                 "/users/login".equals(requestURI) ||
                 "/users/join".equals(requestURI) ||

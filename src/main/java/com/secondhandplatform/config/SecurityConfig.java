@@ -24,7 +24,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/","/error", "/users/**", "/products").permitAll()
+                .requestMatchers("/","/error", "/users/**", "/products", "/products/*").permitAll()
+                .requestMatchers("/products/edit", "/products/", "/orders/**", "/orders").authenticated()
+                // /product/edit, /products/new 와 같은 경로는 정적으로 추가해주어야함
                 .anyRequest().authenticated()
         );
 

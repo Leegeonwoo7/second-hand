@@ -64,11 +64,11 @@ public class UserController {
     public ResponseEntity<?> join(@RequestBody JoinRequest request) {
         JoinResponse response = userService.join(request);
         log.debug("POST /users/join");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/users/login"));
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create("/users/login"));
 
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .headers(headers)
+        return ResponseEntity.status(200)
+//                .headers(headers)
                 .body(response);
     }
 
