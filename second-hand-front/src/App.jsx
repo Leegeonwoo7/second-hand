@@ -30,9 +30,15 @@ function App() {
                         <li>
                             <Link to="/">메인화면</Link>
                         </li>
-                        <li>
-                            <Link to="/join">회원가입</Link>
-                        </li>
+                        {!isLoggedIn ? (
+                            <li>
+                                <Link to="/join">회원가입</Link>
+                            </li>
+                        ) : (
+                            <li>
+                                <Link to="/login">로그아웃</Link>
+                            </li>
+                        )}
 
                         {!isLoggedIn ? (
                             <li>

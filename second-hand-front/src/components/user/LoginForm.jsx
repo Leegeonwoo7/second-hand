@@ -32,6 +32,7 @@ export default function LoginForm() {
                 const data = await response.json();
                 sessionStorage.setItem('token', data.token);
                 setIsLoggedIn(true);
+                navigate("/");
             }
         } catch (error){
             console.log('ERROR: ', error);
